@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BizMsgEnvlp xmlns="urn:NPA:BizMsgEnvlp.001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Header>
+		<AppHdr xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.02" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+			<Fr>
+				<FIId>
+					<FinInstnId>
+						<LEI>9000ZZ009000ZZ000000</LEI>							<!--Pay.UK LEI-->
+					</FinInstnId>
+				</FIId>
+			</Fr>
+			<To>
+				<FIId>
+					<FinInstnId>
+						<LEI>11380081EP12LC86CB11</LEI>							<!--Receiver LEI (Bank B)-->
+					</FinInstnId>
+				</FIId>
+			</To>
+			<BizMsgIdr>B20220711009000ZZ0000S0000000000001</BizMsgIdr>	<!--B+ YYYYMMDD+ Pay.UK ID (LEI 7-18char)+ Submission type (S/M/F)+ unique string (max13char)-->
+			<MsgDefIdr>pacs.008.001.09</MsgDefIdr>
+			<CreDt>2022-07-11T08:45:02+00:00</CreDt>
+		</AppHdr>
+	</Header>
+	<Body>
+		<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.09">		<!--pacs.008 passes through unchanged-->
+			<FIToFICstmrCdtTrf>
+				<GrpHdr>
+					<MsgId>M20220711UUGANOMFJ9X7S0000000000001</MsgId>		
+					<CreDtTm>2022-07-11T08:45:02+00:00</CreDtTm>
+					<NbOfTxs>1</NbOfTxs>
+					<CtrlSum>1760.30</CtrlSum>
+					<IntrBkSttlmDt>2022-07-11</IntrBkSttlmDt>
+					<SttlmInf>
+						<SttlmMtd>CLRG</SttlmMtd>
+						<ClrSys>
+							<Cd>UKD</Cd>
+						</ClrSys>
+					</SttlmInf>
+					<PmtTpInf>
+						<LclInstrm>
+							<Cd>TRF</Cd>										
+						</LclInstrm>
+					</PmtTpInf>
+				</GrpHdr>
+				<CdtTrfTxInf>
+					<PmtId>
+						<EndToEndId>EndToEndId1234</EndToEndId>
+						<UETR>21a2832e-b727-4fa2-83cb-865909af40f1</UETR>
+					</PmtId>
+					<IntrBkSttlmAmt Ccy="GBP">1760.30</IntrBkSttlmAmt>
+					<ChrgBr>SLEV</ChrgBr>
+					<InstgAgt>
+						<FinInstnId>
+							<LEI>113800UUGANOMFJ9X711</LEI>						<!--Bank A LEI-->
+						</FinInstnId>
+					</InstgAgt>
+					<InstdAgt>
+						<FinInstnId>
+							<LEI>11380081EP12LC86CB11</LEI>						<!--Bank B LEI-->
+						</FinInstnId>
+					</InstdAgt>
+					<Dbtr>
+						<Nm>Jack Brown</Nm>
+					</Dbtr>
+					<DbtrAcct>
+						<Id>
+							<Othr>
+								<Id>46043767</Id>
+							</Othr>
+						</Id>
+					</DbtrAcct>
+					<DbtrAgt>
+						<FinInstnId>
+							<ClrSysMmbId>
+								<ClrSysId>
+									<Cd>GBDSC</Cd>
+								</ClrSysId>
+								<MmbId>123456</MmbId>
+							</ClrSysMmbId>
+						</FinInstnId>
+					</DbtrAgt>
+					<CdtrAgt>
+						<FinInstnId>
+							<ClrSysMmbId>
+								<ClrSysId>
+									<Cd>GBDSC</Cd>
+								</ClrSysId>
+								<MmbId>098765</MmbId>
+							</ClrSysMmbId>
+						</FinInstnId>
+					</CdtrAgt>
+					<Cdtr>
+						<Nm>Michael Jones</Nm>
+					</Cdtr>
+					<CdtrAcct>
+						<Id>
+							<Othr>
+								<Id>38604858</Id>
+							</Othr>
+						</Id>
+					</CdtrAcct>
+					<RmtInf>
+						<Strd>
+							<CdtrRefInf>
+								<Ref>PaymentRef</Ref>
+							</CdtrRefInf>
+						</Strd>
+					</RmtInf>
+				</CdtTrfTxInf>
+			</FIToFICstmrCdtTrf>
+		</Document>
+	</Body>
+</BizMsgEnvlp>

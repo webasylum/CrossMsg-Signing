@@ -1,0 +1,117 @@
+{
+  "BizMsgEnvlp": {
+    "Header": {
+      "AppHdr": {
+        "Fr": {
+          "FIId": {
+            "FinInstnId": {
+              "LEI": "113800UUGANOMFJ9711"
+            }
+          }
+        },
+        "To": {
+          "FIId": {
+            "FinInstnId": {
+              "LEI": "9000ZZ009000ZZ000000"
+            }
+          }
+        },
+        "BizMsgIdr": "B20220711UUGANOMFJ9X7S0000000000001",
+        "MsgDefIdr": "pacs.008.001.09",
+        "CreDt": "2022-07-11T08:45:00+00:00"
+      }
+    },
+    "Body": {
+      "Document": {
+        "FIToFICstmrCdtTrf": {
+          "GrpHdr": {
+            "MsgId": "M20220711UUGANOMFJ9X7S0000000000001",
+            "CreDtTm": "2022-07-11T08:45:00+00:00",
+            "NbOfTxs": "1",
+            "CtrlSum": "1760.30",
+            "IntrBkSttlmDt": "2022-07-11",
+            "SttlmInf": {
+              "SttlmMtd": "CLRG",
+              "ClrSys": {
+                "Cd": "UKD"
+              }
+            },
+            "PmtTpInf": {
+              "LclInstrm": {
+                "Cd": "TRF"
+              }
+            }
+          },
+          "CdtTrfTxInf": {
+            "PmtId": {
+              "EndToEndId": "EndToEndId1234",
+              "UETR": "21a2832e-b727-4fa2-83cb-865909af40f1"
+            },
+            "IntrBkSttlmAmt": {
+              "amt": "1760.30",
+              "Ccy": "GBP"
+            },
+            "ChrgBr": "SLEV",
+            "InstgAgt": {
+              "FinInstnId": {
+                "LEI": "113800UUGANOMFJ9X711"
+              }
+            },
+            "InstdAgt": {
+              "FinInstnId": {
+                "LEI": "11380081EP12LC86CB11"
+              }
+            },
+            "Dbtr": {
+              "Nm": "Jack Brown"
+            },
+            "DbtrAcct": {
+              "Id": {
+                "Othr": {
+                  "Id": "46043767"
+                }
+              }
+            },
+            "DbtrAgt": {
+              "FinInstnId": {
+                "ClrSysMmbId": {
+                  "ClrSysId": {
+                    "Cd": "GBDSC"
+                  },
+                  "MmbId": "123456"
+                }
+              }
+            },
+            "CdtrAgt": {
+              "FinInstnId": {
+                "ClrSysMmbId": {
+                  "ClrSysId": {
+                    "Cd": "GBDSC"
+                  },
+                  "MmbId": "098765"
+                }
+              }
+            },
+            "Cdtr": {
+              "Nm": "Michael Jones"
+            },
+            "CdtrAcct": {
+              "Id": {
+                "Othr": {
+                  "Id": "38604858"
+                }
+              }
+            },
+            "RmtInf": {
+              "Strd": {
+                "CdtrRefInf": {
+                  "Ref": "PaymentRef"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

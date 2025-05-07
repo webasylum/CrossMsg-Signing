@@ -1,0 +1,48 @@
+name: tsg-crossmsg-signing
+
+services:
+  app:
+    build: 
+      context: .
+      target: builder
+      labels:
+        - "com.tsg.project=tsg-crossmsg-signing"
+        - "com.tsg.service=app"
+        - "com.tsg.description=TSG Cross Message Signing Application"
+    container_name: tsg-crossmsg-signing-app
+    volumes:
+      - .:/app
+      - gradle-cache:/root/.gradle
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+  app-debug:
+    build: 
+      context: .
+      target: builder
+      labels:
+        - "com.tsg.project=tsg-crossmsg-signing"
+        - "com.tsg.service=app-debug"
+        - "com.tsg.description=TSG Cross Message Signing Debug Service"
+    container_name: tsg-crossmsg-signing-debug
+    volumes:
+      - .:/app
+      - gradle-cache:/root/.gradle
+    environment:
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    ports:
+      - "5005:5005"
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  gradle-cache:
+    name: tsg-crossmsg-signing-gradle-cache 
