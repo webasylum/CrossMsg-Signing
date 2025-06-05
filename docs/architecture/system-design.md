@@ -40,6 +40,15 @@ This document outlines the system design for the ISO 20022 message signing and v
 - Signature verification
 - Message integrity checks
 
+## Containerized Development & Testing
+- All builds, tests, and development tasks run inside Docker containers for consistency and reproducibility.
+- Gradle is used for builds and test execution, replacing Maven.
+- All unit and integration tests use JUnit 5, with a 5-minute timeout and resource cleanup.
+- Test coverage includes canonicalization, signature persistence across format conversion, and negative cases (tampering, wrong key, etc.).
+- Test results and coverage reports are available in `build/reports/`.
+- Code is organized by strict layer separation (infrastructure, service, script, test), and all configuration is via environment variables.
+- Dependency injection and constructor-based initialization are used throughout the codebase.
+
 ## Usage Examples
 [To be added with implementation]
 
@@ -51,8 +60,16 @@ This document outlines the system design for the ISO 20022 message signing and v
 - Nimbus JOSE + JWT
 - JUnit 5
 - XML/JSON processing libraries
+- Docker
+- Gradle
 
 ## Change History
+
+### 1.1.0 - 2024-06-XX
+- **Change**: Add containerized development, Gradle, and comprehensive test strategy
+- **Reason**: Align documentation with new codebase and workflow
+- **Impact**: All users and contributors must use the containerized workflow and follow updated test/documentation policies
+- **Migration**: See updated README and docs for new workflow
 
 ### 1.0.0 - 2024-03-19
 - **Change**: Initial system design documentation

@@ -9,6 +9,7 @@ This document outlines the strategy for transitioning to quantum-safe algorithms
 - Classical cryptography (RSA/ECDSA)
 - XML and JSON message formats
 - Multiple signature strategies
+- **Test harness and codebase are designed to support hybrid and quantum-safe algorithms as they are added.**
 
 ### Transition Phases
 
@@ -21,6 +22,7 @@ This document outlines the strategy for transitioning to quantum-safe algorithms
 - Integration of quantum-safe algorithms
 - Support for both classical and quantum-safe signatures
 - Backward compatibility
+- **Containerized test harness and modular codebase enable rapid integration and testing of new algorithms.**
 
 #### Phase 3: Full Quantum-Safe Implementation
 - Pure quantum-safe algorithms
@@ -84,8 +86,15 @@ This document outlines the strategy for transitioning to quantum-safe algorithms
 - Classical cryptography libraries
 - Testing frameworks
 - Performance monitoring tools
+- **Containerized test harness and Gradle-based workflow**
 
 ## Change History
+
+### 1.1.0 - 2024-06-XX
+- **Change**: Confirmed readiness for hybrid/quantum-safe integration and test harness extensibility
+- **Reason**: Align documentation with new codebase and workflow
+- **Impact**: All users and contributors must use the containerized workflow and follow updated test/documentation policies
+- **Migration**: See updated README and docs for new workflow
 
 ### 1.0.0 - 2024-03-19
 - **Change**: Initial quantum transition strategy

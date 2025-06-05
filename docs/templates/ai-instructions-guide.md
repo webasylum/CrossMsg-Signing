@@ -19,16 +19,19 @@ content: [file content or specific sections]
    - Always specify the file path
    - Include relevant file content
    - Mention any dependencies
+   - **Specify if the file is part of a containerized, test-driven workflow.**
 
 2. **Change Instructions**
    - Be specific about what to change
    - Reference existing content
    - Specify preservation requirements
+   - **Describe any test or containerization context relevant to the change.**
 
 3. **Documentation Updates**
    - Reference the documentation template
    - Include change history
    - Maintain cross-references
+   - **Ensure documentation reflects the containerized, test-driven workflow.**
 
 ## Example Instructions
 
@@ -47,6 +50,7 @@ Changes required:
 2. Update implementation details
 3. Preserve existing content
 4. Update change history
+5. **Describe any test or containerization context.**
 ```
 
 ## Best Practices
@@ -56,6 +60,7 @@ Changes required:
    - Current content
    - Change requirements
    - Documentation updates
+   - **Test and containerization context**
 
 2. **Avoid**
    - Vague instructions
@@ -67,6 +72,7 @@ Changes required:
    - Maintain version history
    - Preserve existing content
    - Update cross-references
+   - **Reflect the containerized, test-driven workflow.**
 
 ## Template Usage
 

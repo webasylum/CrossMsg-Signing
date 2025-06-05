@@ -1,8 +1,26 @@
 # Payment Message Signature Strategies Test Suite
 
+**Author:** Martin Sansone (martin@web-asylum.com)
+
 ## Overview
 
-This repository provides a comprehensive test harness for evaluating signature strategies that ensure end-to-end integrity of ISO 20022 pacs.008 payment messages across format conversions (XML ↔ JSON) in a low-trust, multi-hop payment infrastructure.
+This repository provides a comprehensive, containerized test harness for evaluating signature strategies that ensure end-to-end integrity of ISO 20022 pacs.008 payment messages across format conversions (XML ↔ JSON) in a low-trust, multi-hop payment infrastructure.
+
+## What's New (2024-06)
+- **Containerized Development:** All builds, tests, and development tasks run inside Docker containers for consistency and reproducibility.
+- **Gradle Build System:** Replaces Maven for faster, more flexible builds and test execution.
+- **Strict Layer Separation:** Code is organized by infrastructure, service, script, and test layers, with dependency injection and constructor-based initialization.
+- **Environment-Driven Configuration:** All configuration is via environment variables, loaded from `.env` files. No hardcoded values.
+- **Comprehensive Testing:**
+  - All unit and integration tests use JUnit 5, with a 5-minute timeout and resource cleanup.
+  - Tests are run inside the container using Gradle (`./dev.ps1 test` or `./gradlew test`).
+  - Test coverage includes canonicalization, signature persistence across format conversion, and negative cases (tampering, wrong key, etc.).
+  - Test results and coverage reports are available in `build/reports/`.
+- **Signature Strategies:**
+  - XML C14N + XMLDSig (W3C C14N 1.1, Apache Santuario)
+  - JSON Canonicalization (RFC 8785) + JWS (Nimbus JOSE + JWT)
+  - Hybrid/Detached Hash (SHA-256, BouncyCastle/JCA)
+- **Documentation Policy:** All code changes must be accompanied by documentation updates. Documentation is versioned and checked alongside code.
 
 ## Project Phases
 
@@ -593,4 +611,18 @@ The ISO message samples are used to validate signature strategies across differe
    - Coverage reporting
    - Test result archiving
    - Performance monitoring
+
+## Change History
+
+### 1.1.0 - 2024-06-XX
+- **Change**: Major update for containerized Gradle-based development, strict layer separation, and comprehensive test strategy
+- **Reason**: Align documentation with new codebase and workflow
+- **Impact**: All users and contributors must use the containerized workflow and follow updated test/documentation policies
+- **Migration**: See updated README and docs for new workflow
+
+### 1.0.0 - 2024-03-19
+- **Change**: Initial system design documentation
+- **Reason**: Project initialization
+- **Impact**: Establishes baseline architecture
+- **Migration**: N/A
 

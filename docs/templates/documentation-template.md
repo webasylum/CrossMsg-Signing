@@ -43,3 +43,5 @@
 
 ---
 **Note**: This document follows the [Documentation Preservation Policy](../architecture/documentation-policy.md). All changes must maintain existing content and include proper version history. 
+
+**Note:** All documentation must reflect the containerized, test-driven workflow and be kept in sync with the codebase and test strategy. 
