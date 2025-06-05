@@ -1,0 +1,16 @@
+{
+    "go.toolsManagement.autoUpdate": true,
+    "cursor.composer.cmdPFilePicker2": true,
+    "cursor.general.gitGraphIndexing": "enabled",
+    "plantuml.server": "http://localhost:8085/uml",
+    "plantuml.render": "PlantUMLServer",
+    "plantuml.serverIndex": 0,
+    "editor.scrollbar.horizontal": "visible",
+    "editor.scrollbar.verticalScrollbarSize": 10,
+    "workbench.list.smoothScrolling": true,
+    "workbench.preferredDarkColorTheme": "Default Dark+",
+    "workbench.preferredHighContrastColorTheme": "Default High Contrast",
+    "workbench.colorTheme": "Default Dark+",
+    "redhat.telemetry.enabled": false,
+    "java.configuration.runtimes": []
+} 

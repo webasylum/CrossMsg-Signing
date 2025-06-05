@@ -29,24 +29,53 @@ This repository provides a comprehensive test harness for evaluating signature s
 
 ### Project Structure
 ```
-/docs
-  /architecture
-    - system-design.md
-    - security-model.md
-    - quantum-transition.md
-  /api
-    - signature-strategies.md
-    - format-conversion.md
-  /implementation
-    /phase1
-      - classical-implementation.md
-      - test-results.md
-    /phase2
-      - hybrid-implementation.md
-      - performance-analysis.md
-  /examples
-    - signed-messages/
-    - test-cases/
+/
+├── .vscode/                    # VS Code configuration
+│   ├── launch.json            # Debug configuration
+│   └── settings.json          # Java settings
+├── docs/                      # Documentation
+│   ├── architecture/          # Architecture documentation
+│   │   ├── system-design.md
+│   │   ├── security-model.md
+│   │   └── quantum-transition.md
+│   └── templates/             # Documentation templates
+│       └── documentation-template.md
+├── gradle/                    # Gradle wrapper files
+│   └── wrapper/
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── img/                       # Project images and diagrams
+├── iso/                       # ISO 20022 related files
+│   ├── samples/              # Sample messages
+│   │   ├── pacs.008.xml
+│   │   └── pacs.008.json
+│   └── ISO 20022 - JSON Schema Draft 2020-12 generation (v20250321) (clean).docx
+├── puml/                      # PlantUML diagrams
+├── scripts/                   # Utility scripts
+│   └── healthcheck.sh        # Container health check
+├── src/
+│   ├── main/
+│   │   └── java/com/tsg/crossmsg/signing/
+│   │       └── model/        # Core model classes
+│   └── test/
+│       └── java/com/tsg/crossmsg/signing/
+│           ├── hybrid/       # Hybrid signature tests
+│           ├── jws/          # JWS signature tests
+│           ├── xmlsig/       # XML signature tests
+│           ├── BaseSigningTest.java
+│           ├── MessageConverterTest.java
+│           ├── ProjectSetupTest.java
+│           └── SignatureStrategyTest.java
+├── target/                    # Build output directory
+├── .dockerignore             # Docker ignore rules
+├── .gitignore               # Git ignore rules
+├── build.gradle             # Gradle build configuration
+├── dev.ps1                  # Development script
+├── docker-compose.yml       # Docker compose configuration
+├── Dockerfile              # Docker build configuration
+├── gradle.properties       # Gradle properties
+├── README.md              # Project documentation
+└── settings.gradle        # Gradle settings
 ```
 
 ### Documentation Update Process
@@ -166,8 +195,236 @@ For **each** strategy:
 5. **Verify** signature in XML
 
 ### Tools & Commands
-- **JUnit 5**: `mvn test` or IDE run configurations
-- **CursorAI**: use provided Java classes and sample files to autotest conversion & verification
+- **Gradle**: `./gradlew test` or use the provided `dev.ps1` script
+- **Docker**: Use `dev.ps1` script for building and running tests in containers
+- **CursorAI**: Use provided Java classes and sample files to autotest conversion & verification
+
+## Development Environment
+
+### Prerequisites
+- Windows 11 with Docker Desktop installed and running
+- CursorAI IDE (recommended for development)
+- Git for Windows
+
+### Docker Configuration
+This project is configured to run in Windows Docker Desktop containers. All build processes, tests, and development tasks are containerized to ensure consistency across development environments.
+
+Key points:
+- Uses Windows Docker Desktop for container management
+- All Java/Gradle operations run inside containers
+- No local Java or Gradle installation required
+- Development script (`dev.ps1`) handles Docker operations
+- Container configuration optimized for Windows filesystem
+
+### IDE Integration
+The project is set up for development in CursorAI IDE with:
+- Docker Desktop integration
+- Remote debugging support (port 5005)
+- PowerShell script integration
+- Gradle project recognition
+
+### Project Structure
+```
+/
+├── .vscode/                    # VS Code configuration
+│   ├── launch.json            # Debug configuration
+│   └── settings.json          # Java settings
+├── docs/                      # Documentation
+│   ├── architecture/          # Architecture documentation
+│   │   ├── system-design.md
+│   │   ├── security-model.md
+│   │   └── quantum-transition.md
+│   └── templates/             # Documentation templates
+│       └── documentation-template.md
+├── gradle/                    # Gradle wrapper files
+│   └── wrapper/
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── img/                       # Project images and diagrams
+├── iso/                       # ISO 20022 related files
+│   ├── samples/              # Sample messages
+│   │   ├── pacs.008.xml
+│   │   └── pacs.008.json
+│   └── ISO 20022 - JSON Schema Draft 2020-12 generation (v20250321) (clean).docx
+├── puml/                      # PlantUML diagrams
+├── scripts/                   # Utility scripts
+│   └── healthcheck.sh        # Container health check
+├── src/
+│   ├── main/
+│   │   └── java/com/tsg/crossmsg/signing/
+│   │       └── model/        # Core model classes
+│   └── test/
+│       └── java/com/tsg/crossmsg/signing/
+│           ├── hybrid/       # Hybrid signature tests
+│           ├── jws/          # JWS signature tests
+│           ├── xmlsig/       # XML signature tests
+│           ├── BaseSigningTest.java
+│           ├── MessageConverterTest.java
+│           ├── ProjectSetupTest.java
+│           └── SignatureStrategyTest.java
+├── target/                    # Build output directory
+├── .dockerignore             # Docker ignore rules
+├── .gitignore               # Git ignore rules
+├── build.gradle             # Gradle build configuration
+├── dev.ps1                  # Development script
+├── docker-compose.yml       # Docker compose configuration
+├── Dockerfile              # Docker build configuration
+├── gradle.properties       # Gradle properties
+├── README.md              # Project documentation
+└── settings.gradle        # Gradle settings
+```
+
+### Docker-Based Development Setup
+
+This project uses Docker for development to ensure consistency across all environments. The setup includes:
+
+1. **Development Container**
+   - Java 17 (Eclipse Temurin)
+   - Gradle 8.6
+   - PowerShell
+   - All project dependencies
+
+2. **Container Structure**
+   - Multi-stage build for optimized production images
+   - Development container with full tooling
+   - Debug container with remote debugging support
+   - Health checks for container monitoring
+
+3. **Available Commands**
+   ```powershell
+   .\dev.ps1 start    # Start the development container
+   .\dev.ps1 stop     # Stop the development container
+   .\dev.ps1 build    # Build the project
+   .\dev.ps1 test     # Run tests
+   .\dev.ps1 clean    # Clean build files
+   .\dev.ps1 shell    # Open a shell in the dev container
+   .\dev.ps1 help     # Show all available commands
+   ```
+
+4. **Container Services**
+   - `app`: Main application container
+   - `app-debug`: Debug-enabled container (port 5005)
+   - `dev`: Development container with full tooling
+
+5. **Volume Management**
+   - Source code mounted at `/app`
+   - Gradle cache persisted in `gradle-cache` volume
+   - Hot-reload support for development
+
+6. **Remote Debugging**
+   - Debug port: 5005
+   - Connect your IDE to `localhost:5005`
+   - Use `app-debug` service for debugging
+
+### Getting Started
+
+1. **Prerequisites**
+   - Windows 11 with Docker Desktop installed
+   - Docker Desktop configured for Windows containers
+   - PowerShell 7+ (included in container)
+
+2. **Initial Setup**
+   ```powershell
+   # Start the development environment
+   .\dev.ps1 start
+
+   # Build the project
+   .\dev.ps1 build
+
+   # Run tests
+   .\dev.ps1 test
+   ```
+
+3. **Development Workflow**
+   - Start the container: `.\dev.ps1 start`
+   - Get a shell: `.\dev.ps1 shell`
+   - Build changes: `.\dev.ps1 build`
+   - Run tests: `.\dev.ps1 test`
+   - Stop when done: `.\dev.ps1 stop`
+
+4. **Debugging**
+   - Start debug container: `docker-compose up app-debug`
+   - Connect IDE to `localhost:5005`
+   - Set breakpoints in your IDE
+   - Run tests or application to hit breakpoints
+
+### Container Configuration
+
+1. **Development Container (Dockerfile)**
+   ```dockerfile
+   FROM eclipse-temurin:17-jdk-windowsservercore-ltsc2022
+   WORKDIR /app
+   # ... (see Dockerfile for full configuration)
+   ```
+
+2. **Docker Compose Services**
+   ```yaml
+   services:
+     app:
+       build: 
+         context: .
+         target: builder
+     app-debug:
+       build: 
+         context: .
+         target: builder
+     dev:
+       build:
+         context: .
+         dockerfile: Dockerfile
+   ```
+
+3. **Volume Configuration**
+   ```yaml
+   volumes:
+     gradle-cache:
+       name: tsg-crossmsg-signing-gradle-cache
+   ```
+
+### Best Practices
+
+1. **Development**
+   - Always use the development container for coding
+   - Keep the container running during development
+   - Use the provided scripts for all operations
+   - Commit the Gradle wrapper to version control
+
+2. **Testing**
+   - Run tests in the container: `.\dev.ps1 test`
+   - Use debug container for test debugging
+   - Check test reports in `build/reports/tests`
+
+3. **Building**
+   - Use `.\dev.ps1 build` for consistent builds
+   - Clean builds with `.\dev.ps1 clean`
+   - Check build reports in `build/reports`
+
+4. **Container Management**
+   - Start/stop containers as needed
+   - Use `docker-compose ps` to check status
+   - Monitor container health with `docker-compose ps`
+
+### Troubleshooting
+
+1. **Common Issues**
+   - Container won't start: Check Docker Desktop status
+   - Build fails: Try `.\dev.ps1 clean` first
+   - Tests fail: Check container logs
+   - Debug not connecting: Verify port 5005 is free
+
+2. **Container Logs**
+   ```powershell
+   # View container logs
+   docker-compose logs dev
+
+   # Follow logs
+   docker-compose logs -f dev
+   ```
+
+3. **Resource Management**
+   - Monitor container resources in Docker Desktop
+   - Clean up unused containers: `docker-compose down`
+   - Clear Gradle cache if needed: `docker volume rm tsg-crossmsg-signing-gradle-cache`
 
 ## Conventions & Terminology
 - **Canonical Form**: the exact byte stream inputs to hash or signature
@@ -186,4 +443,154 @@ For **each** strategy:
 3. Document implementation details
 4. Begin Phase 2 hybrid implementation planning
 5. Create comprehensive quantum transition documentation
+
+### Message Format Conversion
+The project includes ISO 20022 message samples and conversion documentation:
+- XML samples:
+  - `iso/SinglePriority_Inbound_pacs.008.xml`
+  - `iso/SinglePriority_Outbound_pacs.008.xml`
+- JSON sample:
+  - `iso/SinglePriority_Inbound-pacs008.json`
+- Schema conversion guide:
+  - `iso/ISO 20022 - JSON Schema Draft 2020-12 generation (v20250321) (clean).docx`
+
+The conversion process follows these key principles:
+1. **XML to JSON**:
+   - Strip XML prefixes
+   - Convert currency elements to `{"amt","Ccy"}` format
+   - Transform elements to objects/arrays
+   - Preserve namespace information in JSON structure
+   - Handle both inbound and outbound message formats
+
+2. **JSON to XML**:
+   - Reverse mapping to produce identical XML structure
+   - Maintain canonicalization compatibility
+   - Preserve namespace declarations
+   - Ensure XML schema validation
+   - Support bidirectional conversion
+
+### Test Configuration
+The project uses Gradle with comprehensive test configuration:
+- JUnit 5 for test framework
+- JaCoCo for code coverage
+- Parallel test execution
+- Detailed test reporting
+- 5-minute test timeout
+- Memory-optimized test execution
+
+Test reports are available in:
+- HTML: `build/reports/tests/html/index.html`
+- XML: `build/reports/tests/xml/`
+- Coverage: `build/reports/jacoco/html/index.html`
+
+### ISO Message Testing Strategy
+
+#### Sample Message Usage
+The ISO message samples are used to validate signature strategies across different scenarios:
+
+1. **XML Signature Tests** (`xmlsig/XmlSignatureTest.java`):
+   - Test signing of `SinglePriority_Inbound_pacs.008.xml`
+   - Test signing of `SinglePriority_Outbound_pacs.008.xml`
+   - Verify signatures after XML→JSON→XML conversion
+   - Validate namespace preservation during signing
+   - Test canonicalization with different XML structures
+
+2. **JWS Signature Tests** (`jws/JwsSignatureTest.java`):
+   - Test signing of converted JSON messages
+   - Verify JWS signatures after JSON→XML→JSON conversion
+   - Validate RFC 8785 canonicalization
+   - Test signature verification with different key types
+   - Verify header preservation during conversion
+
+3. **Hybrid Signature Tests** (`hybrid/HybridSignatureTest.java`):
+   - Test detached hash generation for both formats
+   - Verify hash signatures after format conversion
+   - Validate hash consistency across conversions
+   - Test hybrid signature verification
+   - Verify header placement in both formats
+
+#### Test Scenarios
+
+1. **Format Conversion Tests**:
+   ```java
+   @Test
+   @Tag("integration")
+   void testXmlToJsonConversion() {
+       // Load XML sample
+       // Convert to JSON
+       // Verify structure matches JSON sample
+       // Validate namespace handling
+   }
+   ```
+
+2. **Signature Persistence Tests**:
+   ```java
+   @Test
+   @Tag("integration")
+   void testSignaturePersistence() {
+       // Sign XML message
+       // Convert to JSON
+       // Convert back to XML
+       // Verify signature remains valid
+   }
+   ```
+
+3. **Canonicalization Tests**:
+   ```java
+   @Test
+   @Tag("unit")
+   void testXmlCanonicalization() {
+       // Load XML sample
+       // Apply C14N
+       // Verify canonical form
+       // Test signature generation
+   }
+   ```
+
+#### Test Data Management
+
+1. **Sample Loading**:
+   - Samples are loaded from `iso/` directory
+   - Cached in memory for test performance
+   - Validated against schema before use
+   - Namespace declarations preserved
+
+2. **Test Categories**:
+   - `@Tag("unit")`: Individual component tests
+   - `@Tag("integration")`: End-to-end flow tests
+   - `@Tag("slow")`: Performance-intensive tests
+
+3. **Test Resources**:
+   - XML samples for inbound/outbound flows
+   - JSON converted samples
+   - Schema validation files
+   - Test key pairs and certificates
+
+4. **Validation Steps**:
+   - Schema compliance
+   - Namespace preservation
+   - Signature validity
+   - Format conversion accuracy
+   - Header integrity
+
+#### Test Execution
+
+1. **Local Development**:
+   ```powershell
+   .\dev.ps1 test                    # Run all tests
+   .\dev.ps1 test --tests *Xml*      # Run XML-specific tests
+   .\dev.ps1 test --tests *Json*     # Run JSON-specific tests
+   ```
+
+2. **Docker Environment**:
+   - Tests run in isolated containers
+   - Consistent environment across platforms
+   - Resource limits enforced
+   - Reports accessible via volume mounts
+
+3. **Continuous Integration**:
+   - Automated test execution
+   - Coverage reporting
+   - Test result archiving
+   - Performance monitoring
 
