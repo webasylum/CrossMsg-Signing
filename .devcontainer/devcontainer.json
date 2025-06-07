@@ -13,7 +13,7 @@
                 "vscjava.vscode-gradle"
             ],
             "settings": {
-                "java.jdt.ls.java.home": "/usr/lib/jvm/java-17-openjdk",
+                "java.jdt.ls.java.home": "/usr/local/sdkman/candidates/java/current",
                 "java.configuration.updateBuildConfiguration": "automatic",
                 "java.compile.nullAnalysis.mode": "automatic",
                 "java.format.settings.url": ".vscode/java-formatter.xml",
