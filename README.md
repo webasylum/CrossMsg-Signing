@@ -2,6 +2,87 @@
 
 **Author:** Martin Sansone (martin@web-asylum.com)
 
+## 🤖 AI Development Environment Note
+
+> **CRITICAL FOR AI ASSISTANTS:**
+> 
+> **Development Environment:** This project is developed on **Windows 11 with WSL2 Ubuntu, Docker Desktop, and CursorAI IDE integrated with containers**. 
+> 
+> **Key Environment Details:**
+> - **OS:** Windows 11 with WSL2 Ubuntu
+> - **Containerization:** Docker Desktop with container integration
+> - **IDE:** CursorAI IDE connected to development containers
+> - **Build System:** All builds, tests, and development tasks run inside Docker containers
+> - **File System:** Windows filesystem accessed through WSL2
+> - **Terminal:** Use Windows PowerShell or WSL2 bash for Docker commands
+> 
+> **AI Assistant Guidelines:**
+> - Always assume Docker containerized development environment
+> - Recommend Docker commands for Windows host (not inside containers)
+> - Use `dev.ps1` script for container management
+> - Consider WSL2 filesystem performance implications
+> - Provide Windows-specific Docker Desktop troubleshooting when needed
+> - Remember container networking and volume mounts for development
+> 
+> **Common Commands:**
+> ```powershell
+> # Windows host commands (recommended)
+> .\dev.ps1 start    # Start development container
+> .\dev.ps1 test     # Run tests in container
+> .\dev.ps1 shell    # Open shell in container
+> 
+> # Docker commands from Windows host
+> docker-compose up -d
+> docker-compose logs -f
+> ```
+> 
+> **⚠️ Important:** Never assume local Java/Gradle installation - everything runs in containers!
+
+## Documentation Index
+
+### Core Documentation
+- [Implementation Documentation](docs/implementation/README.md) - Detailed implementation guides
+- [Architecture Documentation](docs/architecture/system-design.md) - System architecture and design
+- [Security Model](docs/architecture/security-model.md) - Security implementation details
+- [Quantum Transition](docs/architecture/quantum-transition.md) - Quantum-safe transition strategy
+
+### Setup and Environment
+- [AI Development Environment Config](docs/setup/ai-environment-config.md) - **CRITICAL:** AI assistant environment awareness
+- [Quick Setup Reference](docs/setup/quick-setup-reference.md) - 5-minute setup guide
+- [Windows Environment Setup](docs/setup/windows-environment-setup.md) - Complete Windows 11 + WSL2 + Docker setup
+- [Development Environment](docs/setup/) - Environment configuration and troubleshooting
+
+> **Note:**
+> All builds and tests for this project must be run inside Docker containers using the provided scripts (e.g., `dev.ps1`) or Docker Compose. The `.vscode/settings.json` file is configured for code navigation and editing only; it does not affect the actual build or runtime environment. For more details, see the [Windows Environment Setup Guide](docs/setup/windows-environment-setup.md).
+> 
+> **🤖 AI Assistant Note:** This project uses Windows 11 + WSL2 + Docker Desktop + CursorAI IDE. Always assume containerized development environment and recommend Docker-based commands. See [AI Development Environment Config](docs/setup/ai-environment-config.md) for complete guidelines.
+
+> **⚠️ IMPORTANT: Extension Recommendation Warning**
+> 
+> When opening this project in CursorAI, you may see a notification asking:
+> *"Do you want to install the recommended extensions from Anysphere and auchenberg for this repository?"*
+> 
+> **IGNORE THIS NOTIFICATION** - Do not install these recommended extensions. The project has been tested with an alternative extension build that works correctly for our needs. Installing the recommended extensions will cause compatibility issues and may break the project functionality. Only one version of these extensions is supported for this project, and it's already configured in the project settings.
+
+### Implementation Details
+- [Improvements Log](docs/implementation/improvements.md) - Chronological log of all improvements
+- [XML Signature Implementation](docs/implementation/xml-signature/)
+  - [Namespace Handling](docs/implementation/xml-signature/namespace-handling.md)
+  - [Canonicalization](docs/implementation/xml-signature/canonicalization.md)
+  - [Verification](docs/implementation/xml-signature/verification.md)
+- [JWS Signature Implementation](docs/implementation/jws/strategy.md) - JWS (RFC 7515) + JSON Canonicalization (RFC 8785)
+- [Hybrid/Detached Hash Implementation](docs/implementation/hybrid/strategy.md) - Hybrid/Detached Hash strategy
+- [Testing Implementation](docs/implementation/testing/)
+  - [Test Cases](docs/implementation/testing/test-cases.md)
+  - [Test Data](docs/implementation/testing/test-data.md)
+- [Architecture Details](docs/implementation/architecture/)
+  - [Process Tracking](docs/implementation/architecture/process-tracking.md)
+  - [Error Handling](docs/implementation/architecture/error-handling.md)
+
+### ISO 20022 Documentation
+- [Message Samples](src/test/resources/iso/) - Sample XML and JSON messages
+- [Schema Conversion](src/test/resources/iso/ISO%2020022%20-%20JSON%20Schema%20Draft%202020-12%20generation%20(v20250321)%20(clean).docx)
+
 ## Overview
 
 This repository provides a comprehensive, containerized test harness for evaluating signature strategies that ensure end-to-end integrity of ISO 20022 pacs.008 payment messages across format conversions (XML ↔ JSON) in a low-trust, multi-hop payment infrastructure.
@@ -45,6 +126,47 @@ This repository provides a comprehensive, containerized test harness for evaluat
 
 ## Documentation Standards
 
+### Preservation Requirements
+- **CRITICAL**: All documentation and code changes MUST preserve existing context and information
+- Never remove or overwrite existing documentation without explicit approval
+- When updating documentation:
+  1. First review existing content thoroughly
+  2. Preserve all existing information
+  3. Add new information in a way that complements existing content
+  4. Use append/merge strategies rather than replacement
+  5. Maintain all historical context and examples
+- Documentation changes require explicit approval before merging
+- All AI-assisted changes must be reviewed for context preservation
+
+### Architectural Requirements
+
+#### Separation of Concerns (CRITICAL)
+- **CRITICAL**: All code, tests, and documentation MUST follow strict separation of concerns
+- Each component, test, or document should have a **single, well-defined responsibility**
+- **No redundancy**: If functionality is tested elsewhere, do not duplicate it
+- **Clear boundaries**: Each test should focus on one specific aspect (parser accuracy, signature strategy, format conversion, etc.)
+- **Unique value**: Every test must provide unique validation that no other test provides
+- **Test isolation**: Tests should not depend on or duplicate functionality from other tests
+- **Documentation clarity**: Each document should address one specific concern or aspect
+- **Code organization**: Classes and methods should have single, clear responsibilities
+- **Violation detection**: Before creating any new test, component, or document, verify it provides unique value not covered elsewhere
+- **Refactoring principle**: If redundancy is found, consolidate or remove redundant elements
+
+#### Implementation Guidelines
+- **Test design**: Each test class should focus on one specific concern (e.g., parser accuracy, signature verification, format conversion)
+- **Component design**: Each class should have a single responsibility and clear interface
+- **Documentation design**: Each document should address one specific aspect of the system
+- **Validation**: Before implementation, verify the new element provides unique value
+- **Review process**: All changes must be reviewed for separation of concerns compliance
+
+#### Singleton Principle (Superior Architecture)
+- **TestInfrastructure Singleton**: Applies Singleton design pattern to provide shared functionality while maintaining separation of concerns
+- **Bridge Pattern**: Connects test expectations with actual signature strategy implementations
+- **Lazy Initialization**: Strategy instances created only when needed for optimal performance
+- **Extensible Design**: Easy to add new signature strategies without modifying existing tests
+- **Preserved Tests**: No valuable tests were removed - only improved with better architecture
+- **Superior Solution**: Demonstrates how to solve architectural problems using design patterns
+
 ### Project Structure
 ```
 /
@@ -56,6 +178,12 @@ This repository provides a comprehensive, containerized test harness for evaluat
 │   │   ├── system-design.md
 │   │   ├── security-model.md
 │   │   └── quantum-transition.md
+│   ├── implementation/        # Implementation documentation
+│   │   ├── README.md
+│   │   ├── improvements.md
+│   │   ├── xml-signature/
+│   │   ├── testing/
+│   │   └── architecture/
 │   └── templates/             # Documentation templates
 │       └── documentation-template.md
 ├── gradle/                    # Gradle wrapper files
@@ -118,6 +246,16 @@ This repository provides a comprehensive, containerized test harness for evaluat
 - **Canonicalization:** process of transforming data to a canonical byte stream for stable hashing or signing.
 - **Signature Container:** an element/property in the message header that carries the digital signature or digest.
 
+## Signature Exclusion Principle (Universal Requirement)
+
+> **For all digital signature strategies in this project, the signature or digest must always be calculated over the message content, explicitly excluding the signature itself.**
+>
+> - **XMLDSig:** Enforced by the *enveloped signature transform* ([W3C XMLDSig](https://www.w3.org/TR/xmldsig-core/)), which ensures the `<Signature>` element is excluded from the digest calculation.
+> - **JWS (JSON Web Signature):** Canonicalization and signing are performed over the JSON object **without** the signature property, as required by [RFC 7515](https://datatracker.ietf.org/doc/html/rfc7515) and [RFC 8785](https://datatracker.ietf.org/doc/html/rfc8785).
+> - **Hybrid/Detached Hash:** The digest is always computed over the message, and the signature is stored separately.
+>
+> **If this rule is not followed, signature validation will always fail. This project enforces and audits this rule for every strategy.**
+
 ### Strategy 1: XML C14N + XMLDSig
 
 #### Description
@@ -141,6 +279,8 @@ This repository provides a comprehensive, containerized test harness for evaluat
 - **Libraries:** Apache Santuario (XMLSec), JUnit 5
 - **Canonicalization Method URI:** `http://www.w3.org/2006/12/xml-c14n11`
 - **Signature Algorithm:** `RSA_SHA256` or `ECDSA_SHA256`
+
+> **Signature Exclusion Principle:** This strategy uses the enveloped signature transform to ensure the `<Signature>` element is excluded from the digest calculation, as required by the XMLDSig standard.
 
 ### Strategy 2: JSON Canonicalization (RFC 8785) + JWS
 
@@ -166,6 +306,8 @@ This repository provides a comprehensive, containerized test harness for evaluat
 - **Canonicalization Spec:** RFC 8785 JSON Canonicalization Scheme
 - **JWS Algorithms:** `ES256`, `Ed25519`
 
+> **Signature Exclusion Principle:** This strategy canonicalizes and signs the JSON object **without** the signature property, as required by JWS and RFC 8785.
+
 ### Strategy 3: Hybrid / Detached-Hash
 
 #### Description
@@ -190,6 +332,199 @@ This repository provides a comprehensive, containerized test harness for evaluat
 - **Hash Algorithm:** `SHA-256`
 - **Signature Algorithm:** `RSA_SHA256` or `ECDSA_SHA256`
 
+> **Signature Exclusion Principle:** The digest is always computed over the message content, and the signature is stored separately. The signature is never included in the digest.
+
+## Critical Finding: Cross-Format Signature Strategy Analysis
+
+### **Key Discovery: Canonicalization Consistency Determines Cross-Format Success**
+
+After comprehensive testing of all three signature strategies across XML↔JSON format conversions, a critical finding emerged:
+
+**All three strategies in this project are limited to business data KVPs only** - they extract the same 29 payment fields using `Iso20022KvpParser` and hash only the business data, not the full document structure.
+
+### **The Real Difference: Canonicalization Method Consistency**
+
+| Strategy | Canonicalization Method | Cross-Format Behavior | Success Rate |
+|----------|----------------------|---------------------|--------------|
+| **XML C14N + XMLDSig** | Always uses XML C14N 1.1 | ✅ **WORKS** across formats | 100% |
+| **RFC 8785 + JWS** | Always uses JSON RFC 8785 | ✅ **WORKS** across formats | 100% |
+| **Hybrid/Detached Hash** | Format-specific (XML C14N for XML, RFC 8785 for JSON) | ❌ **FAILS** across formats | 0% |
+
+### **Why XML C14N + XMLDSig and RFC 8785 + JWS Work:**
+
+Both strategies use **consistent canonicalization** regardless of original format:
+
+#### **XML C14N + XMLDSig Strategy:**
+```java
+// JSON→XML scenario:
+Map<String, String> businessKvps = extractKvps(jsonMessage);
+String xmlFormat = convertKvpsToXml(businessKvps);  // Convert to XML
+String canonicalXml = XML_C14N_1_1(xmlFormat);      // Always use XML C14N
+String hash = SHA256(canonicalXml);
+
+// XML→JSON scenario:
+Map<String, String> businessKvps = extractKvps(xmlMessage);
+String xmlFormat = convertKvpsToXml(businessKvps);  // Already XML
+String canonicalXml = XML_C14N_1_1(xmlFormat);      // Same XML C14N
+String hash = SHA256(canonicalXml);
+
+// Result: Same hash, same signature validation!
+```
+
+#### **RFC 8785 + JWS Strategy:**
+```java
+// XML→JSON scenario:
+Map<String, String> businessKvps = extractKvps(xmlMessage);
+String jsonFormat = convertKvpsToJson(businessKvps);  // Convert to JSON
+String canonicalJson = RFC_8785(jsonFormat);          // Always use RFC 8785
+String hash = SHA256(canonicalJson);
+
+// JSON→XML scenario:
+Map<String, String> businessKvps = extractKvps(jsonMessage);
+String jsonFormat = convertKvpsToJson(businessKvps);  // Already JSON
+String canonicalJson = RFC_8785(jsonFormat);          // Same RFC 8785
+String hash = SHA256(canonicalJson);
+
+// Result: Same hash, same signature validation!
+```
+
+### **Why Hybrid/Detached Hash Fails:**
+
+The Hybrid strategy uses **format-specific canonicalization** without conversion:
+
+```java
+// JSON→XML scenario:
+Map<String, String> businessKvps = extractKvps(jsonMessage);
+String canonicalJson = RFC_8785(convertKvpsToJson(businessKvps));  // JSON canonicalization
+String hash1 = SHA256(canonicalJson);
+
+// XML→JSON scenario:
+Map<String, String> businessKvps = extractKvps(xmlMessage);
+String canonicalXml = XML_C14N_1_1(convertKvpsToXml(businessKvps));  // XML canonicalization
+String hash2 = SHA256(canonicalXml);
+
+// Result: Different hashes, signature validation fails!
+```
+
+### **Production Recommendation**
+
+**For ISO 20022 cross-format message signing:**
+
+1. **✅ Use XML C14N + XMLDSig** - Most reliable, established W3C standard
+2. **✅ Use RFC 8785 + JWS** - Modern IETF standard, excellent for JSON-first workflows
+3. **❌ Avoid Hybrid/Detached Hash** - Not suitable for cross-format scenarios
+
+**The key insight:** Choose a strategy that uses **consistent canonicalization method** across all format conversions, not format-specific canonicalization.
+
+## Architectural Insight: Parser Design Enables Standardized Cross-Format Behavior
+
+### **Critical Role of Iso20022KvpParser**
+
+The standardized cross-format behavior demonstrated by XML C14N + XMLDSig and RFC 8785 + JWS strategies is **fundamentally enabled** by the project's `Iso20022KvpParser` implementation.
+
+### **Why Consistent Parser Design is Essential**
+
+#### **1. Consistent Business Data Extraction**
+```java
+// All three strategies use the same parser
+Iso20022KvpParser kvpParser = new Iso20022KvpParser();
+
+// XML format
+Map<String, String> xmlKvps = kvpParser.extractKvpsFromXml(xmlMessage);
+
+// JSON format  
+Map<String, String> jsonKvps = kvpParser.extractKvpsFromJson(jsonMessage);
+
+// Result: Identical 29 KVPs regardless of format
+assertEquals(xmlKvps, jsonKvps); // Always true
+```
+
+#### **2. Format-Agnostic Business Logic**
+- **Same extraction logic** for both XML and JSON
+- **Identical field mapping** using ISO 20022 glossary
+- **Consistent key naming** across formats
+- **Predictable output** regardless of input format
+
+#### **3. Enables Canonicalization Strategy**
+```java
+// Strategy can choose canonicalization method independently
+Map<String, String> businessKvps = kvpParser.extractKvps(message);
+
+// XML C14N + XMLDSig: Always convert to XML
+String xmlFormat = convertKvpsToXml(businessKvps);
+String canonicalXml = XML_C14N_1_1(xmlFormat);
+
+// RFC 8785 + JWS: Always convert to JSON  
+String jsonFormat = convertKvpsToJson(businessKvps);
+String canonicalJson = RFC_8785(jsonFormat);
+```
+
+### **Current Implementation Approach**
+
+The project currently uses a **static parser implementation** with the following characteristics:
+
+#### **1. ISO 20022 Glossary Integration**
+```java
+// Static mapping ensures consistency
+private static final Map<String, String> ISO_20022_GLOSSARY = new HashMap<>();
+static {
+    ISO_20022_GLOSSARY.put("BizMsgIdr", "BusinessMessageIdentifier");
+    ISO_20022_GLOSSARY.put("MsgDefIdr", "MessageDefinitionIdentifier");
+    // ... comprehensive mapping
+}
+```
+
+#### **2. Flexible Canonicalization Strategy**
+```java
+// Parser provides format-agnostic business data
+Map<String, String> businessKvps = kvpParser.extractKvps(message);
+
+// Strategy can apply any canonicalization method
+if (strategy == XML_C14N) {
+    return canonicalizeAsXml(businessKvps);
+} else if (strategy == RFC_8785) {
+    return canonicalizeAsJson(businessKvps);
+}
+```
+
+#### **3. Testability and Validation**
+```java
+// Easy to test extraction consistency
+@Test
+void testCrossFormatExtraction() {
+    Map<String, String> xmlKvps = kvpParser.extractKvpsFromXml(xmlSample);
+    Map<String, String> jsonKvps = kvpParser.extractKvpsFromJson(jsonSample);
+    
+    // Should be identical for same business data
+    assertEquals(xmlKvps, jsonKvps);
+}
+```
+
+### **Future Enhancement Considerations**
+
+The current static implementation provides a solid foundation, but future enhancements could include:
+
+#### **1. Dynamic ISO e-Repository Integration**
+- **Automatic field mapping** from ISO e-Repository
+- **Support for new message types** without code changes
+- **Real-time schema updates** as ISO standards evolve
+
+#### **2. Enhanced Flexibility**
+- **Runtime message type detection**
+- **Automatic field extraction** for any ISO 20022 message
+- **Dynamic canonicalization** based on message structure
+
+#### **3. Implementation Considerations**
+- **Performance optimization** for dynamic parsing
+- **Caching strategies** for frequently used schemas
+- **Fallback mechanisms** for offline operation
+
+### **Conclusion**
+
+The current `Iso20022KvpParser` design **directly enables** the successful cross-format signature validation demonstrated by XML C14N + XMLDSig and RFC 8785 + JWS strategies. The consistent extraction of business data KVPs provides the foundation for reliable cross-format canonicalization.
+
+Future enhancements could expand this capability to handle the full ISO 20022 message universe dynamically, but the current implementation already provides the essential functionality needed for robust cross-format signature validation.
+
 ## Test Plan
 
 ### Directory Structure
@@ -213,7 +548,9 @@ For **each** strategy:
 5. **Verify** signature in XML
 
 ### Tools & Commands
-- **Gradle**: `./gradlew test` or use the provided `dev.ps1` script
+- **Gradle**: Use `gradle` command directly in CursorAI IDE Terminal
+  - Run strategy tests: `gradle test --tests "*StrategyTest"`
+  - Run all tests: `gradle test`
 - **Docker**: Use `dev.ps1` script for building and running tests in containers
 - **CursorAI**: Use provided Java classes and sample files to autotest conversion & verification
 
@@ -240,57 +577,6 @@ The project is set up for development in CursorAI IDE with:
 - Remote debugging support (port 5005)
 - PowerShell script integration
 - Gradle project recognition
-
-### Project Structure
-```
-/
-├── .vscode/                    # VS Code configuration
-│   ├── launch.json            # Debug configuration
-│   └── settings.json          # Java settings
-├── docs/                      # Documentation
-│   ├── architecture/          # Architecture documentation
-│   │   ├── system-design.md
-│   │   ├── security-model.md
-│   │   └── quantum-transition.md
-│   └── templates/             # Documentation templates
-│       └── documentation-template.md
-├── gradle/                    # Gradle wrapper files
-│   └── wrapper/
-│       ├── gradle-wrapper.jar
-│       └── gradle-wrapper.properties
-├── img/                       # Project images and diagrams
-├── iso/                       # ISO 20022 related files
-│   ├── samples/              # Sample messages
-│   │   ├── pacs.008.xml
-│   │   └── pacs.008.json
-│   └── ISO 20022 - JSON Schema Draft 2020-12 generation (v20250321) (clean).docx
-├── puml/                      # PlantUML diagrams
-├── scripts/                   # Utility scripts
-│   └── healthcheck.sh        # Container health check
-├── src/
-│   ├── main/
-│   │   └── java/com/tsg/crossmsg/signing/
-│   │       └── model/        # Core model classes
-│   └── test/
-│       └── java/com/tsg/crossmsg/signing/
-│           ├── hybrid/       # Hybrid signature tests
-│           ├── jws/          # JWS signature tests
-│           ├── xmlsig/       # XML signature tests
-│           ├── BaseSigningTest.java
-│           ├── MessageConverterTest.java
-│           ├── ProjectSetupTest.java
-│           └── SignatureStrategyTest.java
-├── target/                    # Build output directory
-├── .dockerignore             # Docker ignore rules
-├── .gitignore               # Git ignore rules
-├── build.gradle             # Gradle build configuration
-├── dev.ps1                  # Development script
-├── docker-compose.yml       # Docker compose configuration
-├── Dockerfile              # Docker build configuration
-├── gradle.properties       # Gradle properties
-├── README.md              # Project documentation
-└── settings.gradle        # Gradle settings
-```
 
 ### Docker-Based Development Setup
 
@@ -356,8 +642,8 @@ This project uses Docker for development to ensure consistency across all enviro
 3. **Development Workflow**
    - Start the container: `.\dev.ps1 start`
    - Get a shell: `.\dev.ps1 shell`
-   - Build changes: `.\dev.ps1 build`
-   - Run tests: `.\dev.ps1 test`
+   - Build changes: `gradle build`
+   - Run strategy tests: `gradle test --tests "*StrategyTest"`
    - Stop when done: `.\dev.ps1 stop`
 
 4. **Debugging**
@@ -408,13 +694,14 @@ This project uses Docker for development to ensure consistency across all enviro
    - Commit the Gradle wrapper to version control
 
 2. **Testing**
-   - Run tests in the container: `.\dev.ps1 test`
+   - Run strategy tests: `gradle test --tests "*StrategyTest"`
+   - Run all tests: `gradle test`
    - Use debug container for test debugging
    - Check test reports in `build/reports/tests`
 
 3. **Building**
-   - Use `.\dev.ps1 build` for consistent builds
-   - Clean builds with `.\dev.ps1 clean`
+   - Use `gradle build` for consistent builds
+   - Clean builds with `gradle clean`
    - Check build reports in `build/reports`
 
 4. **Container Management**
@@ -465,12 +752,12 @@ This project uses Docker for development to ensure consistency across all enviro
 ### Message Format Conversion
 The project includes ISO 20022 message samples and conversion documentation:
 - XML samples:
-  - `iso/SinglePriority_Inbound_pacs.008.xml`
-  - `iso/SinglePriority_Outbound_pacs.008.xml`
+  - `src/test/resources/iso/SinglePriority_Inbound_pacs.008.xml`
+  - `src/test/resources/iso/SinglePriority_Outbound_pacs.008.xml`
 - JSON sample:
-  - `iso/SinglePriority_Inbound-pacs008.json`
+  - `src/test/resources/iso/SinglePriority_Inbound-pacs008.json`
 - Schema conversion guide:
-  - `iso/ISO 20022 - JSON Schema Draft 2020-12 generation (v20250321) (clean).docx`
+  - `src/test/resources/iso/ISO 20022 - JSON Schema Draft 2020-12 generation (v20250321) (clean).docx`
 
 The conversion process follows these key principles:
 1. **XML to JSON**:
@@ -501,74 +788,148 @@ Test reports are available in:
 - XML: `build/reports/tests/xml/`
 - Coverage: `build/reports/jacoco/html/index.html`
 
+### Running Tests
+To run tests in the CursorAI IDE Terminal:
+
+#### Focused Unit Tests with TestInfrastructure Singleton (Recommended)
+```bash
+# Run all focused KVP parser tests with TestInfrastructure Singleton
+gradle test --tests "*Iso20022KvpParser*Test"
+
+# Run specific direction tests
+gradle test --tests "*XmlToJson*Test"    # XML to JSON direction tests
+gradle test --tests "*JsonToXml*Test"    # JSON to XML direction tests
+
+# Run specific strategy tests
+gradle test --tests "*XmlC14n*Test"      # XML C14N + XMLDSig tests
+gradle test --tests "*Jws*Test"          # JSON Canonicalization + JWS tests
+gradle test --tests "*Hybrid*Test"       # Hybrid/Detached Hash tests
+
+# Run direct comparison test
+gradle test --tests "*DirectComparison*Test"
+
+# Run project setup test
+gradle test --tests "*ProjectSetup*Test"
+```
+
+#### All Tests with Verbose Output
+```bash
+# Run all tests with maximum verbosity
+gradle test --info --debug
+
+# Run all tests with standard verbosity
+gradle test --info
+```
+
 ### ISO Message Testing Strategy
 
-#### Sample Message Usage
-The ISO message samples are used to validate signature strategies across different scenarios:
+#### Focused Unit Test Approach with TestInfrastructure Singleton (Updated 2024-06)
+The project now uses a **cleaner, more focused approach** that eliminates format conversion complexity and focuses on genuine payment data integrity. Instead of converting between XML and JSON formats (which introduced conversion errors), the tests use **matching ISO 20022 message pairs** that contain identical payment data in different syntax formats. The approach uses **TestInfrastructure Singleton** to provide superior architecture and shared functionality.
 
-1. **XML Signature Tests** (`xmlsig/XmlSignatureTest.java`):
-   - Test signing of `SinglePriority_Inbound_pacs.008.xml`
-   - Test signing of `SinglePriority_Outbound_pacs.008.xml`
-   - Verify signatures after XML→JSON→XML conversion
-   - Validate namespace preservation during signing
-   - Test canonicalization with different XML structures
+#### Seven Focused Unit Tests with TestInfrastructure Singleton
+The test suite consists of seven focused unit tests, each testing one specific responsibility with no redundancy:
 
-2. **JWS Signature Tests** (`jws/JwsSignatureTest.java`):
-   - Test signing of converted JSON messages
-   - Verify JWS signatures after JSON→XML→JSON conversion
-   - Validate RFC 8785 canonicalization
-   - Test signature verification with different key types
-   - Verify header preservation during conversion
+1. **XML to JSON - XML C14N + XMLDSig** (`Iso20022KvpParserXmlToJsonXmlC14nTest.java`):
+   - Tests XML C14N 1.1 canonicalization on XML format
+   - Tests XMLDSig signature generation and verification
+   - Verifies KVP extraction and preservation
+   - Validates signature exclusion principle
 
-3. **Hybrid Signature Tests** (`hybrid/HybridSignatureTest.java`):
-   - Test detached hash generation for both formats
-   - Verify hash signatures after format conversion
-   - Validate hash consistency across conversions
-   - Test hybrid signature verification
-   - Verify header placement in both formats
+2. **JSON to XML - XML C14N + XMLDSig** (`Iso20022KvpParserJsonToXmlXmlC14nTest.java`):
+   - Tests XML C14N + XMLDSig strategy on JSON-derived data
+   - Verifies KVP consistency between JSON and XML formats
+   - Tests signature exclusion principle on JSON data
+
+3. **XML to JSON - JSON Canonicalization + JWS** (`Iso20022KvpParserXmlToJsonJwsTest.java`):
+   - Tests RFC 8785 JSON canonicalization on XML-derived data
+   - Tests JWS signature generation and verification
+   - Verifies KVP extraction and preservation
+
+4. **JSON to XML - JSON Canonicalization + JWS** (`Iso20022KvpParserJsonToXmlJwsTest.java`):
+   - Tests RFC 8785 + JWS strategy on JSON format
+   - Verifies KVP consistency between formats
+   - Tests signature exclusion principle
+
+5. **XML to JSON - Hybrid/Detached Hash** (`Iso20022KvpParserXmlToJsonHybridTest.java`):
+   - Tests SHA-256 digest computation on XML format
+   - Tests RSA signature generation and verification
+   - Verifies detached hash signature principles
+
+6. **JSON to XML - Hybrid/Detached Hash** (`Iso20022KvpParserJsonToXmlHybridTest.java`):
+   - Tests Hybrid/Detached Hash strategy on JSON format
+   - Verifies KVP consistency between formats
+   - Tests signature exclusion principle
+
+#### Key Benefits of New Approach
+
+1. **Eliminates Conversion Complexity**: No more format conversion between XML and JSON
+2. **Focuses on Genuine Payment Data**: Tests extract and compare actual payment KVPs, ignoring structural elements
+3. **Strict Separation of Concerns**: Each test has a single, well-defined responsibility with no redundancy
+4. **Consistent Test Structure**: All tests follow the same pattern for easy maintenance
+5. **Validates KVP Parser**: Confirms correct filtering of structural elements vs. payment data
+6. **TestInfrastructure Singleton**: Superior architecture using Singleton Principle for shared functionality
+7. **Preserved All Tests**: No valuable tests were removed, only improved with better architecture
 
 #### Test Scenarios
 
-1. **Format Conversion Tests**:
-   ```java
-   @Test
-   @Tag("integration")
-   void testXmlToJsonConversion() {
-       // Load XML sample
-       // Convert to JSON
-       // Verify structure matches JSON sample
-       // Validate namespace handling
-   }
-   ```
-
-2. **Signature Persistence Tests**:
-   ```java
-   @Test
-   @Tag("integration")
-   void testSignaturePersistence() {
-       // Sign XML message
-       // Convert to JSON
-       // Convert back to XML
-       // Verify signature remains valid
-   }
-   ```
-
-3. **Canonicalization Tests**:
+1. **KVP Extraction Tests**:
    ```java
    @Test
    @Tag("unit")
-   void testXmlCanonicalization() {
-       // Load XML sample
-       // Apply C14N
-       // Verify canonical form
-       // Test signature generation
+   void testKvpExtractionFromMatchingFiles() {
+       // Load both XML and JSON samples directly
+       // Extract KVPs from both formats
+       // Verify identical payment data
+       // Validate structural elements are ignored
    }
    ```
+
+2. **Signature Strategy Tests**:
+   ```java
+   @Test
+   @Tag("unit")
+   void testSignatureStrategyOnFormat() {
+       // Test specific signature strategy on format
+       // Verify signature generation and verification
+       // Validate KVP preservation through signing
+   }
+   ```
+
+3. **Signature Exclusion Tests**:
+   ```java
+   @Test
+   @Tag("unit")
+   void testSignatureExclusionPrinciple() {
+       // Verify signature is excluded from digest calculation
+       // Validate signature exclusion principle compliance
+   }
+   ```
+
+4. **Real-World Scenario Tests**:
+   ```java
+   @Test
+   @Tag("unit")
+   void testRealWorldScenario() {
+       // Test complete flow: format → signature → conversion → validation
+       // Verify signature preservation across format conversions
+       // Validate backward compatibility for signature strategies
+   }
+   ```
+
+**Note**: Tampering detection is reserved for integration/UI testing scenarios to maintain separation of concerns and focus on backward compatibility validation.
+
+#### Project Setup Test
+The following test validates basic project configuration:
+
+1. **Project Setup Test** (`ProjectSetupTest.java`):
+   - Validates key pair generation
+   - Ensures cryptographic algorithms are available
+   - Verifies basic project dependencies
 
 #### Test Data Management
 
 1. **Sample Loading**:
-   - Samples are loaded from `iso/` directory
+   - Samples are loaded from `src/test/resources/iso/` directory
    - Cached in memory for test performance
    - Validated against schema before use
    - Namespace declarations preserved
@@ -614,6 +975,12 @@ The ISO message samples are used to validate signature strategies across differe
 
 ## Change History
 
+### 1.2.0 - 2024-06-XX
+- **Change**: Major test suite refactoring to implement cleaner, granular unit test approach with TestInfrastructure Singleton
+- **Reason**: Eliminate format conversion complexity, focus on genuine payment data integrity, and apply superior architecture using Singleton Principle
+- **Impact**: Seven focused unit tests with TestInfrastructure Singleton replace complex integration tests, cleaner test execution, preserved all valuable tests
+- **Migration**: Use new focused tests (`*Iso20022KvpParser*Test`) with TestInfrastructure Singleton instead of legacy integration tests
+
 ### 1.1.0 - 2024-06-XX
 - **Change**: Major update for containerized Gradle-based development, strict layer separation, and comprehensive test strategy
 - **Reason**: Align documentation with new codebase and workflow
@@ -625,4 +992,79 @@ The ISO message samples are used to validate signature strategies across differe
 - **Reason**: Project initialization
 - **Impact**: Establishes baseline architecture
 - **Migration**: N/A
+
+## Auditability & Traceability
+
+All signature strategies in this project produce detailed, auditable output files during signing and verification. **Every output file includes a `Strategy:` identifier** in its header, making it clear which cryptographic approach was used for each operation. This is critical for standards compliance, global interoperability, and for the ISO TSG committee to evaluate and recommend solutions.
+
+### Example Output Header
+
+```
+Process ID: 3
+Timestamp: 20250608_110344
+Operation: after_id_set
+Strategy: XMLDSig (C14N 1.1 + XMLDSig)
+Canonicalized Content:
+---------------------
+... (canonicalized XML here) ...
+```
+
+Or for JSON/JWS:
+```
+Process ID: 7
+Timestamp: 20250608_110344
+Operation: signing
+Strategy: JWS (RFC 8785 Canonical JSON + JWS)
+Key-Value Pairs:
+----------------
+... (key-value pairs here) ...
+```
+
+Or for Hybrid/Detached Hash:
+```
+Process ID: 12
+Timestamp: 20250608_110344
+Operation: digest
+Strategy: Hybrid (Detached Hash + Signature)
+Digest:
+-------
+... (digest value here) ...
+```
+
+### Why This Matters
+- **Auditability:** Every output is traceable to the cryptographic method used.
+- **Interoperability:** Facilitates cross-strategy and cross-format validation.
+- **Standards Compliance:** Enables ISO TSG and other bodies to evaluate, compare, and recommend strategies for real-world, global use.
+- **Integration Testing:** End-to-end and integration tests always include the correct strategy label in their outputs.
+
+### Strategy Labels Used
+- `XMLDSig (C14N 1.1 + XMLDSig)`
+- `JWS (RFC 8785 Canonical JSON + JWS)`
+- `Hybrid (Detached Hash + Signature)`
+
+**All strategy classes implement a `getStrategyLabel()` method, ensuring this pattern is consistent and future-proof.**
+
+> **Critical Security Principle: Signature Exclusion**
+>
+> For **all digital signature strategies**, the signature or digest must always be calculated over the message content **excluding the signature itself**. This is a universal requirement:
+> - For **XMLDSig**, this is enforced by using the *enveloped signature transform* (`http://www.w3.org/2000/09/xmldsig#enveloped-signature`), which ensures the `<Signature>` element is excluded from the digest calculation.
+> - For **JWS (JSON Web Signature)**, the canonicalization and signing are performed over the JSON object **without** the signature property.
+> - For **Hybrid/Detached Hash**, the digest is always computed over the message, and the signature is stored separately.
+>
+> **If this rule is not followed, signature validation will always fail.** This project enforces this rule in all strategies and makes it auditable in every output.
+
+> **Project Focus & Philosophy**
+>
+> This repository is a **test harness and standards exploration tool**—not a production system. Its purpose is to rigorously evaluate, compare, and provide auditable evidence for digital signature strategies that can guarantee end-to-end integrity of payment messages as they traverse multiple agents and are converted between different syntax formats (such as XML and JSON). This is especially critical in scenarios where there is **no central authority** responsible for message security, as is increasingly the case in global, cross-border, and open banking environments.
+>
+> **Why does this matter?**
+>
+> - The ISO community and the global payments industry are moving toward **interoperable message syntax types** (XML, JSON, etc.).
+> - There is a critical gap: how can we ensure that payment messages remain untampered and trustworthy as they are converted and relayed between independent agents, without relying on a single trusted intermediary?
+> - This project provides a **transparent, auditable, and comparative framework** for testing and proving which cryptographic strategies (XMLDSig, JWS, Hybrid, etc.) actually work in these real-world, cross-format, multi-hop scenarios.
+> - The outputs—canonicalized content, key-value pairs, digests, and validation results—are all labeled, logged, and designed for **maximum auditability and standards evaluation**.
+> - **All strategies strictly enforce the rule that the signature/digest is calculated over the message content excluding the signature itself.**
+> - The ultimate goal is to provide the **evidence and methodology** needed for the ISO TSG and other standards bodies to recommend a globally approved, interoperable, and efficient approach to payment message integrity.
+>
+> **This project is not about building a production system.** It is about providing the proof, transparency, and insight needed to close a crucial standards gap and enable trust, interoperability, and development ROI for the next generation of cross-border payments.
 

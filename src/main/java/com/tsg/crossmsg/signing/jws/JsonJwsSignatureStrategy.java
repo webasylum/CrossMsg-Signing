@@ -6,10 +6,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
-import com.nimbusds.jose.util.Base64URL;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.text.ParseException;
 
 /**
  * Implements JSON Canonicalization (RFC 8785) + JWS signature strategy.
@@ -68,24 +66,32 @@ public class JsonJwsSignatureStrategy {
 
     /**
      * Embeds the JWS signature string in the AppHdr.Signature property of the JSON.
-     * @param json The JSON object (must have AppHdr)
+     * @param json The JSON object (must have Header.AppHdr)
      * @param signature The JWS compact string
      * @return The JSON object with the signature embedded
      */
     public ObjectNode embedSignatureInAppHdr(ObjectNode json, String signature) {
-        ObjectNode appHdr = (ObjectNode) json.get("AppHdr");
-        if (appHdr == null) throw new IllegalArgumentException("AppHdr property missing");
+        JsonNode header = json.get("Header");
+        if (header == null) {
+            throw new IllegalArgumentException("Header property missing");
+        }
+        ObjectNode appHdr = (ObjectNode) header.get("AppHdr");
+        if (appHdr == null) {
+            throw new IllegalArgumentException("AppHdr property missing in Header");
+        }
         appHdr.put("Signature", signature);
         return json;
     }
 
     /**
      * Extracts the JWS signature string from the AppHdr.Signature property of the JSON.
-     * @param json The JSON object (must have AppHdr)
+     * @param json The JSON object (must have Header.AppHdr)
      * @return The JWS compact string, or null if not present
      */
     public String extractSignatureFromAppHdr(JsonNode json) {
-        JsonNode appHdr = json.get("AppHdr");
+        JsonNode header = json.get("Header");
+        if (header == null) return null;
+        JsonNode appHdr = header.get("AppHdr");
         if (appHdr == null) return null;
         JsonNode sig = appHdr.get("Signature");
         return sig != null ? sig.asText() : null;
@@ -93,14 +99,21 @@ public class JsonJwsSignatureStrategy {
 
     /**
      * Removes the Signature property from AppHdr in the JSON.
-     * @param json The JSON object (must have AppHdr)
+     * @param json The JSON object (must have Header.AppHdr)
      * @return The JSON object with the signature removed
      */
     public ObjectNode removeSignatureFromAppHdr(ObjectNode json) {
-        ObjectNode appHdr = (ObjectNode) json.get("AppHdr");
+        JsonNode header = json.get("Header");
+        if (header != null && header.isObject()) {
+            ObjectNode appHdr = (ObjectNode) header.get("AppHdr");
         if (appHdr != null) {
             appHdr.remove("Signature");
+            }
         }
         return json;
+    }
+
+    public String getStrategyLabel() {
+        return "JWS (RFC 8785 Canonical JSON + JWS)";
     }
 } 

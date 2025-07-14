@@ -67,6 +67,28 @@ public class ConversionRules {
         ELEMENT_TRANSFORMATIONS.put("CreDtTm", "creationDateTime");
         ELEMENT_TRANSFORMATIONS.put("NbOfTxs", "numberOfTransactions");
         ELEMENT_TRANSFORMATIONS.put("TtlIntrBkSttlmAmt", "totalInterbankSettlementAmount");
+        
+        // Payment specific elements
+        ELEMENT_TRANSFORMATIONS.put("IntrBkSttlmAmt", "interbankSettlementAmount");
+        ELEMENT_TRANSFORMATIONS.put("IntrBkSttlmDt", "interbankSettlementDate");
+        ELEMENT_TRANSFORMATIONS.put("SttlmMtd", "settlementMethod");
+        ELEMENT_TRANSFORMATIONS.put("ClrSys", "clearingSystem");
+        ELEMENT_TRANSFORMATIONS.put("PmtTpInf", "paymentTypeInformation");
+        ELEMENT_TRANSFORMATIONS.put("LclInstrm", "localInstrument");
+        ELEMENT_TRANSFORMATIONS.put("EndToEndId", "endToEndIdentification");
+        ELEMENT_TRANSFORMATIONS.put("UETR", "uetr");
+        ELEMENT_TRANSFORMATIONS.put("ChrgBr", "chargeBearer");
+        ELEMENT_TRANSFORMATIONS.put("FinInstnId", "financialInstitutionIdentification");
+        ELEMENT_TRANSFORMATIONS.put("LEI", "lei");
+        ELEMENT_TRANSFORMATIONS.put("ClrSysId", "clearingSystemIdentification");
+        ELEMENT_TRANSFORMATIONS.put("MmbId", "memberIdentification");
+        ELEMENT_TRANSFORMATIONS.put("Nm", "name");
+        ELEMENT_TRANSFORMATIONS.put("Id", "identification");
+        ELEMENT_TRANSFORMATIONS.put("Othr", "other");
+        ELEMENT_TRANSFORMATIONS.put("RmtInf", "remittanceInformation");
+        ELEMENT_TRANSFORMATIONS.put("Strd", "structured");
+        ELEMENT_TRANSFORMATIONS.put("CdtrRefInf", "creditorReferenceInformation");
+        ELEMENT_TRANSFORMATIONS.put("Ref", "reference");
     }
     
     // Elements to preserve during conversion
@@ -75,6 +97,10 @@ public class ConversionRules {
         PRESERVED_ELEMENTS.add("Signature");
         PRESERVED_ELEMENTS.add("Sgntr");
         PRESERVED_ELEMENTS.add("AppHdr");
+        PRESERVED_ELEMENTS.add("BizMsgEnvlp");
+        PRESERVED_ELEMENTS.add("Header");
+        PRESERVED_ELEMENTS.add("Body");
+        PRESERVED_ELEMENTS.add("Document");
     }
     
     // Elements that should be excluded from canonicalization
@@ -83,6 +109,8 @@ public class ConversionRules {
         NON_CANONICAL_ELEMENTS.add("CreDtTm");  // Creation timestamp
         NON_CANONICAL_ELEMENTS.add("MsgId");    // Message ID
         NON_CANONICAL_ELEMENTS.add("NbOfTxs");  // Number of transactions
+        NON_CANONICAL_ELEMENTS.add("BizMsgIdr"); // Business Message Identifier
+        NON_CANONICAL_ELEMENTS.add("CreDt");    // Creation Date
     }
     
     // Currency handling
@@ -94,15 +122,26 @@ public class ConversionRules {
     static {
         ARRAY_ELEMENTS.add("CdtTrfTxInf");
         ARRAY_ELEMENTS.add("PmtInf");
+        ARRAY_ELEMENTS.add("SttlmInf");
+        ARRAY_ELEMENTS.add("PmtTpInf");
+        ARRAY_ELEMENTS.add("RmtInf");
     }
     
     // Special handling for nested structures
     public static final Map<String, String> NESTED_STRUCTURES = new HashMap<>();
     static {
+        NESTED_STRUCTURES.put("FIToFICstmrCdtTrf", "fiToFICustomerCreditTransfer");
+        NESTED_STRUCTURES.put("GrpHdr", "groupHeader");
+        NESTED_STRUCTURES.put("CdtTrfTxInf", "creditTransferTransactionInformation");
+        NESTED_STRUCTURES.put("PmtId", "paymentIdentification");
+        NESTED_STRUCTURES.put("InstgAgt", "instructingAgent");
+        NESTED_STRUCTURES.put("InstdAgt", "instructedAgent");
         NESTED_STRUCTURES.put("Dbtr", "debtor");
-        NESTED_STRUCTURES.put("Cdtr", "creditor");
+        NESTED_STRUCTURES.put("DbtrAcct", "debtorAccount");
         NESTED_STRUCTURES.put("DbtrAgt", "debtorAgent");
         NESTED_STRUCTURES.put("CdtrAgt", "creditorAgent");
+        NESTED_STRUCTURES.put("Cdtr", "creditor");
+        NESTED_STRUCTURES.put("CdtrAcct", "creditorAccount");
     }
     
     // Validation rules
@@ -112,6 +151,17 @@ public class ConversionRules {
         REQUIRED_ELEMENTS.add("MsgId");
         REQUIRED_ELEMENTS.add("CreDtTm");
         REQUIRED_ELEMENTS.add("NbOfTxs");
+        REQUIRED_ELEMENTS.add("IntrBkSttlmAmt");
+        REQUIRED_ELEMENTS.add("IntrBkSttlmDt");
+        REQUIRED_ELEMENTS.add("SttlmMtd");
+        REQUIRED_ELEMENTS.add("ClrSys");
+        REQUIRED_ELEMENTS.add("EndToEndId");
+        REQUIRED_ELEMENTS.add("UETR");
+        REQUIRED_ELEMENTS.add("ChrgBr");
+        REQUIRED_ELEMENTS.add("FinInstnId");
+        REQUIRED_ELEMENTS.add("LEI");
+        REQUIRED_ELEMENTS.add("Nm");
+        REQUIRED_ELEMENTS.add("Id");
     }
     
     // Error messages

@@ -35,3 +35,9 @@ replay_pid*
 
 # Docker
 .docker/ 
+
+# Test Keys - Private keys should never be committed
+test-keys/*.pem
+test-keys/*.key
+test-keys/*.p12
+test-keys/*.jks 

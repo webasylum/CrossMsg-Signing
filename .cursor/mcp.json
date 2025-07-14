@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "office-word": {
+      "command": "python",
+      "args": ["-m", "office_word_mcp_server"],
+      "port": 8765,
+      "environment": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  }
+} 

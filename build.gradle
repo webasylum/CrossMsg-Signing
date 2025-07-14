@@ -56,10 +56,40 @@ test {
     testLogging {
         events "passed", "skipped", "failed"
         showStandardStreams = true
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+        exceptionFormat = 'full'
+        displayGranularity = 2
+        info {
+            events "passed", "skipped", "failed"
+            showStandardStreams = true
+            showExceptions = true
+            showCauses = true
+            showStackTraces = true
+            exceptionFormat = 'full'
+            displayGranularity = 2
+        }
+        debug {
+            events "passed", "skipped", "failed"
+            showStandardStreams = true
+            showExceptions = true
+            showCauses = true
+            showStackTraces = true
+            exceptionFormat = 'full'
+            displayGranularity = 2
+        }
     }
     filter {
         includeTestsMatching "com.tsg.crossmsg.signing.*"
     }
+    // Ensure tests provide verbose output
+    systemProperty 'java.util.logging.config.file', 'src/test/resources/logging.properties'
+    systemProperty 'org.slf4j.simpleLogger.defaultLogLevel', 'debug'
+    systemProperty 'org.slf4j.simpleLogger.showDateTime', 'true'
+    systemProperty 'org.slf4j.simpleLogger.showThreadName', 'true'
+    systemProperty 'org.slf4j.simpleLogger.showLogName', 'true'
+    systemProperty 'org.slf4j.simpleLogger.showShortLogName', 'true'
 }
 
 wrapper {

@@ -83,4 +83,8 @@ public class HybridDetachedHashStrategy {
         }
         return null;
     }
+
+    public String getStrategyLabel() {
+        return "Hybrid (Detached Hash + Signature)";
+    }
 } 

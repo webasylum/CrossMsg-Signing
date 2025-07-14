@@ -4,7 +4,10 @@
         "dockerfile": "Dockerfile"
     },
     "workspaceFolder": "/app",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/app,type=bind,consistency=cached",
+    "mounts": [
+        "source=${localWorkspaceFolder},target=/app,type=bind"
+    ],
+    "postCreateCommand": "ls -la /app && echo 'Workspace mounted successfully'",
     "customizations": {
         "vscode": {
             "extensions": [

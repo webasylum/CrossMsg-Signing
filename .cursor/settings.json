@@ -1,0 +1,108 @@
+{
+  "preservationRules": {
+    "documentation": {
+      "enforcePreservation": true,
+      "protectedPatterns": [
+        "**/*.md",
+        "**/docs/**/*",
+        "**/README.md",
+        "**/CHANGELOG.md"
+      ],
+      "mergeStrategy": "contextAware",
+      "requireContextPreservation": true,
+      "contextAnalysis": {
+        "enabled": true,
+        "semanticAnalysis": true,
+        "importanceScoring": true,
+        "contextualUnderstanding": true
+      },
+      "updateRules": {
+        "requireContextReview": true,
+        "allowImprovements": true,
+        "preserveSemanticValue": true,
+        "maintainHistoricalContext": true
+      }
+    },
+    "code": {
+      "enforcePreservation": true,
+      "protectedPatterns": [
+        "**/src/**/*.java",
+        "**/src/**/*.xml",
+        "**/src/**/*.json",
+        "**/src/**/*.properties"
+      ],
+      "mergeStrategy": "contextAware",
+      "requireContextPreservation": true,
+      "contextAnalysis": {
+        "enabled": true,
+        "semanticAnalysis": true,
+        "importanceScoring": true,
+        "contextualUnderstanding": true
+      },
+      "updateRules": {
+        "requireContextReview": true,
+        "allowImprovements": true,
+        "preserveSemanticValue": true,
+        "maintainHistoricalContext": true
+      }
+    },
+    "configuration": {
+      "enforcePreservation": true,
+      "protectedPatterns": [
+        "**/*.gradle",
+        "**/*.properties",
+        "**/pom.xml",
+        "**/package.json",
+        "**/tsconfig.json",
+        "**/.env*"
+      ],
+      "mergeStrategy": "contextAware",
+      "requireContextPreservation": true,
+      "contextAnalysis": {
+        "enabled": true,
+        "semanticAnalysis": true,
+        "importanceScoring": true,
+        "contextualUnderstanding": true
+      },
+      "updateRules": {
+        "requireContextReview": true,
+        "allowImprovements": true,
+        "preserveSemanticValue": true,
+        "maintainHistoricalContext": true
+      }
+    }
+  },
+  "aiAssist": {
+    "preserveContext": true,
+    "requireExplicitApproval": true,
+    "documentationRules": {
+      "preserveExisting": true,
+      "mergeStrategy": "contextAware",
+      "requireContext": true,
+      "contextualUnderstanding": {
+        "enabled": true,
+        "semanticAnalysis": true,
+        "importanceScoring": true,
+        "historicalContext": true
+      },
+      "improvementRules": {
+        "allowEnhancements": true,
+        "requireJustification": true,
+        "maintainSemanticValue": true,
+        "preserveHistoricalContext": true
+      }
+    },
+    "contentAnalysis": {
+      "semanticUnderstanding": true,
+      "contextPreservation": true,
+      "importanceAssessment": true,
+      "historicalValue": true
+    },
+    "updateStrategy": {
+      "contextAware": true,
+      "semanticPreservation": true,
+      "improvementFocused": true,
+      "historicalContext": true
+    }
+  }
+} 

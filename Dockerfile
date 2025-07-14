@@ -6,7 +6,6 @@ LABEL org.opencontainers.image.title="TSG Cross Message Signing"
 LABEL org.opencontainers.image.description="ISO 20022 message signing and validation service"
 LABEL org.opencontainers.image.vendor="TSG"
 LABEL com.tsg.project="tsg-crossmsg-signing"
-LABEL com.tsg.version="1.0.0"
 
 # Set working directory
 WORKDIR /app
@@ -61,10 +60,47 @@ WORKDIR /app
 COPY build.gradle settings.gradle gradle.properties ./
 COPY src ./src
 
-# Install curl for healthcheck
+# Install system dependencies and Python
 RUN apt-get update && apt-get install -y \
     curl \
-    && rm -rf /var/lib/apt/lists/*
+    python3 \
+    python3-pip \
+    python3-dev \
+    build-essential \
+    git \
+    && rm -rf /var/lib/apt/lists/* \
+    && python3 -m pip install --upgrade pip
+
+# Create a non-root user for development
+RUN useradd -m -s /bin/bash developer \
+    && chown -R developer:developer /app \
+    && mkdir -p /home/developer/.local \
+    && chown -R developer:developer /home/developer/.local
+
+# Set up Python environment
+ENV PYTHONPATH=/app
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PATH="/home/developer/.local/bin:${PATH}"
+
+# Install base Python packages as root
+RUN pip3 install --no-cache-dir \
+    python-docx \
+    office-word-mcp-server \
+    pylint \
+    autopep8 \
+    black \
+    mypy \
+    pytest \
+    pytest-cov \
+    pip-tools
+
+# Create a requirements directory for project-specific dependencies
+RUN mkdir -p /app/requirements \
+    && chown -R developer:developer /app/requirements
+
+# Switch to non-root user
+USER developer
 
 # Build the application
 RUN gradle build --no-daemon
