@@ -1,6 +1,26 @@
 version: '3.8'
 
 services:
+  # Core Project Development Service
+  dev:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    container_name: tsg-crossmsg-signing-dev
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+      - gradle-cache:/home/gradle/.gradle
+    working_dir: /app
+    environment:
+      - GRADLE_OPTS=-Dorg.gradle.daemon=false
+    ports:
+      - "5005:5005" # Debug port
+    command: tail -f /dev/null
+    networks:
+      - crossmsg-network
+
   # Spring Boot Backend
   backend:
     build:
@@ -19,7 +39,7 @@ services:
       - crossmsg-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/CrossMsg-Signing/api/health"]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/CrossMsg-Signing/api/health" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -65,3 +85,5 @@ networks:
 volumes:
   logs:
     driver: local
+  gradle-cache:
+    name: tsg-crossmsg-signing-gradle-cache

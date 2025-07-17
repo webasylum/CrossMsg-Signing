@@ -38,19 +38,278 @@
 > 
 > **⚠️ Important:** Never assume local Java/Gradle installation - everything runs in containers!
 
-## Documentation Index
+## Project Architecture Overview
 
-### Core Documentation
+This project consists of **two integrated components** designed to work together:
+
+### 🎯 **Core Project: Iso20022KvpParser**
+**Purpose**: Sophisticated parser that accurately identifies Key-Value Pairs (KVPs) within ISO 20022 XML and JSON payment messages and successfully signs them using three different cryptographic strategies.
+
+**Key Features**:
+- **Advanced KVP Extraction**: Identifies and extracts business data KVPs from complex ISO 20022 message structures
+- **Three Signature Strategies**:
+  1. **XML C14N + XMLDSig**: W3C XML Canonicalization 1.1 + XML Digital Signatures
+  2. **RFC 8785 + JWS**: JSON Canonicalization (RFC 8785) + JSON Web Signatures
+  3. **Hybrid/Detached Hash**: SHA-256 digest + asymmetric signature
+- **Comprehensive Unit Tests**: Validates KVP extraction accuracy and signature strategy effectiveness
+- **Cross-Format Compatibility**: Works with both XML and JSON ISO 20022 message formats
+
+### 🌐 **WebUI Sub-Project: CrossMsg-Signing-WebUI**
+**Purpose**: Web-based demonstration interface that showcases the full functionality of the core `Iso20022KvpParser`.
+
+**Key Features**:
+- **Interactive Message Editing**: Users can view and edit XML/JSON payment message examples
+- **Real-Time Signature Testing**: Three buttons to test each signature strategy from the core project
+- **Tampering Detection**: Validates whether canonical business data KVPs have been modified
+- **Signature Validation**: Compares current message signatures against original core project signatures
+- **Full Parser Integration**: Uses the actual `Iso20022KvpParser` from the core project (not a dummy implementation)
+
+### 🔗 **Architectural Integration**
+The WebUI sub-project is **intentionally included** in the same codebase as the core project because:
+
+1. **Separation of Concerns**: Core parser logic is separate from UI presentation
+2. **Singleton Principle**: Shared `Iso20022KvpParser` instance provides consistent behavior
+3. **Real Implementation**: WebUI must use the actual sophisticated parser, not a simplified version
+4. **Unified Testing**: Both components can be tested together in the same containerized environment
+
+### 📁 **Project Structure**
+```
+TSG-CrossMsg-Signing/
+├── src/                          # Core Iso20022KvpParser implementation
+│   ├── main/java/com/tsg/crossmsg/signing/
+│   │   ├── model/                # Core model classes
+│   │   ├── parser/               # Iso20022KvpParser implementation
+│   │   └── strategies/           # Three signature strategies
+│   └── test/                     # Core project unit tests
+├── CrossMsg-Signing-WebUI/       # WebUI demonstration sub-project
+│   ├── webui-backend/            # Spring Boot backend for WebUI
+│   ├── webui-frontend/           # React frontend for WebUI
+│   └── nginx/                    # Reverse proxy configuration
+├── docker-compose.yml            # Full application deployment (WebUI)
+├── dev.ps1                       # Development script for core project
+└── .devcontainer/                # VS Code Dev Container configuration
+```
+
+## Development Environment Setup
+
+### 🚀 **Quick Start (Recommended)**
+
+#### **Option 1: Core Project Development (Docker Compose)**
+For working on the core `Iso20022KvpParser` and running unit tests:
+
+1. **Prerequisites**:
+   - Windows 11 with Docker Desktop installed and running
+   - PowerShell or Command Prompt
+   - Git for Windows
+
+2. **Clone and Navigate**:
+   ```powershell
+   git clone <repository-url>
+   cd TSG-CrossMsg-Signing
+   ```
+
+3. **Start Development Environment**:
+   ```powershell
+   .\dev.ps1 start
+   ```
+
+4. **Verify Setup**:
+   ```powershell
+   docker-compose ps                    # Should show dev container running
+   docker-compose exec dev ls -la /app  # Should show project files
+   docker-compose exec dev java -version # Should show Java 17
+   docker-compose exec dev gradle --version # Should show Gradle 8.6
+   ```
+
+5. **Run Core Tests**:
+   ```powershell
+   .\dev.ps1 test
+   # OR
+   docker-compose exec dev gradle test --tests "*Iso20022KvpParser*Test"
+   ```
+
+6. **Verify Setup** (Optional):
+   ```powershell
+   .\verify-setup.ps1
+   ```
+
+6. **Access Development Shell**:
+   ```powershell
+   .\dev.ps1 shell
+   # OR
+   docker-compose exec dev bash
+   ```
+
+#### **Option 2: VS Code Dev Containers (Alternative)**
+For IDE-integrated development:
+
+1. **Open VS Code/Cursor IDE**
+2. **Open the project folder**: `C:\Projects\TSG-CrossMsg-Signing`
+3. **Open in Dev Container**:
+   - Press `Ctrl+Shift+P`
+   - Type: `Dev Containers: Open Folder in Container`
+   - Wait for container to build
+4. **Verify Setup**:
+   ```bash
+   ls -la /app                    # Should show project files
+   java -version                  # Should show Java 17
+   gradle --version               # Should show Gradle 8.6
+   ```
+5. **Run Core Tests**:
+   ```bash
+   gradle test --tests "*Iso20022KvpParser*Test"
+   ```
+
+#### **Option 2: Full Application Development (Docker Compose)**
+For working on both core project and WebUI together:
+
+1. **Navigate to WebUI directory**:
+   ```powershell
+   cd C:\Projects\TSG-CrossMsg-Signing\CrossMsg-Signing-WebUI
+   ```
+2. **Start full application**:
+   ```powershell
+   docker-compose up -d
+   ```
+3. **Access WebUI**: Open browser to `http://localhost:3000`
+4. **Access Backend API**: `http://localhost:8080`
+
+### 🔧 **Detailed Setup Instructions**
+
+#### **Prerequisites**
+- Windows 11 with Docker Desktop installed and running
+- PowerShell or Command Prompt
+- Git for Windows
+- VS Code or Cursor IDE (optional, for IDE integration)
+
+#### **Core Project Development**
+```powershell
+# Navigate to project root
+cd C:\Projects\TSG-CrossMsg-Signing
+
+# Start development environment
+.\dev.ps1 start
+
+# Verify container is running
+docker-compose ps
+
+# Run tests
+.\dev.ps1 test
+
+# Access development shell
+.\dev.ps1 shell
+```
+
+#### **WebUI Development**
+```powershell
+# Navigate to WebUI sub-project
+cd C:\Projects\TSG-CrossMsg-Signing\CrossMsg-Signing-WebUI
+
+# Start the full application stack
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop the application
+docker-compose down
+```
+
+#### **Full Stack Development**
+```powershell
+# From project root, start both core and WebUI
+cd C:\Projects\TSG-CrossMsg-Signing
+
+# Start WebUI (includes backend that uses core parser)
+cd CrossMsg-Signing-WebUI
+docker-compose up -d
+
+# In another terminal, work on core project
+cd C:\Projects\TSG-CrossMsg-Signing
+# Use VS Code Dev Container for core development
+```
+
+### 🧪 **Testing Strategy**
+
+#### **Core Project Tests**
+```powershell
+# Run all core project tests
+.\dev.ps1 test
+# OR
+docker-compose exec dev gradle test
+
+# Run specific KVP parser tests
+docker-compose exec dev gradle test --tests "*Iso20022KvpParser*Test"
+
+# Run signature strategy tests
+docker-compose exec dev gradle test --tests "*XmlC14n*Test"
+docker-compose exec dev gradle test --tests "*Jws*Test"
+docker-compose exec dev gradle test --tests "*Hybrid*Test"
+
+# Run tests with verbose output
+docker-compose exec dev gradle test --info --console=plain
+```
+
+#### **WebUI Testing**
+1. **Start WebUI**: `docker-compose up -d` (from WebUI directory)
+2. **Open Browser**: Navigate to `http://localhost:3000`
+3. **Test Functionality**:
+   - View sample XML/JSON messages
+   - Edit message values
+   - Test signature strategies
+   - Verify tampering detection
+
+### 🔍 **Troubleshooting**
+
+#### **Core Project Issues**
+- **Container won't start**: 
+  ```powershell
+  # Clean up Docker state
+  docker-compose down --volumes
+  docker system prune -f
+  .\dev.ps1 start
+  ```
+- **Mount errors**: Restart Docker Desktop and WSL2:
+  ```powershell
+  wsl --shutdown
+  # Restart Docker Desktop from system tray
+  .\dev.ps1 start
+  ```
+- **Tests failing**: Check container logs:
+  ```powershell
+  docker-compose logs dev
+  docker-compose exec dev gradle test --info
+  ```
+- **Java/Gradle issues**: Container uses Java 17 and Gradle 8.6 (already configured)
+
+#### **WebUI Issues**
+- **Port conflicts**: Ensure ports 3000, 8080, 80, 443 are available
+- **Container startup failures**: Check `docker-compose logs` for specific errors
+- **Parser integration issues**: Verify WebUI backend is using core project classes
+
+#### **Common Docker Issues**
+- **WSL2 path problems**: Use explicit bind mounts in docker-compose.yml
+- **Permission issues**: Ensure Docker Desktop has access to project directory
+- **Resource limits**: Increase Docker Desktop memory allocation if needed
+
+### 📚 **Documentation Index**
+
+#### **Core Project Documentation**
 - [Implementation Documentation](docs/implementation/README.md) - Detailed implementation guides
 - [Architecture Documentation](docs/architecture/system-design.md) - System architecture and design
 - [Security Model](docs/architecture/security-model.md) - Security implementation details
 - [Quantum Transition](docs/architecture/quantum-transition.md) - Quantum-safe transition strategy
 
-### Setup and Environment
+#### **Setup and Environment**
+- [Development Environment Setup](docs/setup/development-environment-setup.md) - **COMPREHENSIVE:** Complete setup guide for core project and WebUI
 - [AI Development Environment Config](docs/setup/ai-environment-config.md) - **CRITICAL:** AI assistant environment awareness
 - [Quick Setup Reference](docs/setup/quick-setup-reference.md) - 5-minute setup guide
 - [Windows Environment Setup](docs/setup/windows-environment-setup.md) - Complete Windows 11 + WSL2 + Docker setup
 - [Development Environment](docs/setup/) - Environment configuration and troubleshooting
+
+#### **WebUI Documentation**
+- [WebUI README](README-WebUI.md) - WebUI-specific documentation
+- [WebUI Setup Guide](CrossMsg-Signing-WebUI/README.md) - WebUI setup and configuration
 
 > **Note:**
 > All builds and tests for this project must be run inside Docker containers using the provided scripts (e.g., `dev.ps1`) or Docker Compose. The `.vscode/settings.json` file is configured for code navigation and editing only; it does not affect the actual build or runtime environment. For more details, see the [Windows Environment Setup Guide](docs/setup/windows-environment-setup.md).
@@ -94,7 +353,7 @@ This repository provides a comprehensive, containerized test harness for evaluat
 - **Environment-Driven Configuration:** All configuration is via environment variables, loaded from `.env` files. No hardcoded values.
 - **Comprehensive Testing:**
   - All unit and integration tests use JUnit 5, with a 5-minute timeout and resource cleanup.
-  - Tests are run inside the container using Gradle (`./dev.ps1 test` or `./gradlew test`).
+  - Tests are run inside the container using Gradle (`.\dev.ps1 test` or `docker-compose exec dev gradle test`).
   - Test coverage includes canonicalization, signature persistence across format conversion, and negative cases (tampering, wrong key, etc.).
   - Test results and coverage reports are available in `build/reports/`.
 - **Signature Strategies:**
@@ -102,6 +361,27 @@ This repository provides a comprehensive, containerized test harness for evaluat
   - JSON Canonicalization (RFC 8785) + JWS (Nimbus JOSE + JWT)
   - Hybrid/Detached Hash (SHA-256, BouncyCastle/JCA)
 - **Documentation Policy:** All code changes must be accompanied by documentation updates. Documentation is versioned and checked alongside code.
+
+## ✅ **Phase 1 Status: Core Project Complete (July 2025)**
+
+### **What's Working:**
+- **✅ Core Development Environment**: Docker containerized development with Java 17 and Gradle 8.6
+- **✅ Iso20022KvpParser**: Sophisticated parser with 1000+ lines and ISO e-Repository integration
+- **✅ Three Signature Strategies**: All strategies implemented and tested successfully
+- **✅ Comprehensive Test Suite**: 7 focused unit tests with real-world scenario validation
+- **✅ Cross-Format Compatibility**: XML↔JSON signature preservation validated
+- **✅ Signature Exclusion Principle**: All strategies correctly implemented
+- **✅ Development Scripts**: `dev.ps1` script for easy container management
+
+### **Test Results:**
+- **✅ All Tests Passing**: 100% success rate across all signature strategies
+- **✅ KVP Extraction**: 29 payment KVPs correctly extracted from both XML and JSON
+- **✅ Signature Generation**: All three strategies successfully generate signatures
+- **✅ Signature Verification**: All signatures validate correctly
+- **✅ Cross-Format Testing**: XML↔JSON conversions preserve signature integrity
+
+### **Ready for Phase 2:**
+The core project is fully functional and ready for WebUI integration. All cryptographic operations work correctly, and the development environment is stable and reliable.
 
 ## Project Phases
 

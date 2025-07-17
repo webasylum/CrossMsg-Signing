@@ -1,7 +1,7 @@
 # Development script for TSG CrossMsg Signing project
 
 param(
-    [Parameter(Position=0)]
+    [Parameter(Position = 0)]
     [string]$Command = "help"
 )
 
@@ -17,7 +17,7 @@ function Show-Help {
 }
 
 function Start-DevContainer {
-    docker-compose up -d
+    docker-compose up -d dev
 }
 
 function Stop-DevContainer {
@@ -25,7 +25,7 @@ function Stop-DevContainer {
 }
 
 function Enter-DevContainer {
-    docker-compose exec dev powershell
+    docker-compose exec dev bash
 }
 
 function Invoke-GradleCommand {

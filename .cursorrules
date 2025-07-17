@@ -1,0 +1,53 @@
+# CursorAI Development Environment Rules
+
+## 🤖 CRITICAL: Development Environment Context
+
+**This project is developed on Windows 11 with WSL2 Ubuntu, Docker Desktop, and CursorAI IDE integrated with containers.**
+
+### Environment Details
+- **OS:** Windows 11 with WSL2 Ubuntu
+- **Containerization:** Docker Desktop with container integration  
+- **IDE:** CursorAI IDE connected to development containers
+- **Build System:** All builds, tests, and development tasks run inside Docker containers
+- **File System:** Windows filesystem accessed through WSL2
+- **Terminal:** Use Windows PowerShell or WSL2 bash for Docker commands
+
+### AI Assistant Guidelines
+- **Always assume Docker containerized development environment**
+- **Recommend Docker commands for Windows host (not inside containers)**
+- **Use `dev.ps1` script for container management**
+- **Consider WSL2 filesystem performance implications**
+- **Provide Windows-specific Docker Desktop troubleshooting when needed**
+- **Remember container networking and volume mounts for development**
+
+### Common Commands
+```powershell
+# Windows host commands (recommended)
+.\dev.ps1 start    # Start development container
+.\dev.ps1 test     # Run tests in container
+.\dev.ps1 shell    # Open shell in container
+
+# Docker commands from Windows host
+docker-compose up -d
+docker-compose logs -f
+```
+
+### Important Reminders
+- **Never assume local Java/Gradle installation - everything runs in containers!**
+- **Always recommend Docker-based solutions**
+- **Consider Windows + WSL2 + Docker Desktop stack specifics**
+- **Use container networking and volumes appropriately**
+- **Provide Windows-specific troubleshooting when needed**
+
+### Quick Reference
+| Task | Command | Notes |
+|------|---------|-------|
+| Start development | `.\dev.ps1 start` | Windows host |
+| Run tests | `.\dev.ps1 test` | In container |
+| Open shell | `.\dev.ps1 shell` | Container shell |
+| Build project | `.\dev.ps1 build` | Container build |
+| Debug | `docker-compose up app-debug` | Port 5005 |
+| View logs | `docker-compose logs -f` | Follow logs |
+| Stop all | `.\dev.ps1 stop` | Clean shutdown |
+
+**Remember:** This is a container-first development environment. Always recommend Docker-based solutions and consider the Windows + WSL2 + Docker Desktop stack when providing assistance. 
